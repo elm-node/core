@@ -1,4 +1,4 @@
 elm-stuff
 node_modules
-test/main.js
-test/output.txt
+test/**/main.js
+test/FileSystem/output.txt

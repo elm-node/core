@@ -5,7 +5,8 @@
     "license": "Unlicense",
     "source-directories": [
         "src",
-        "test"
+        "test/Crypto",
+        "test/FileSystem"
     ],
     "exposed-modules": [
         "Node.Buffer",
@@ -15,6 +16,7 @@
     "native-modules": true,
     "dependencies": {
         "elm-lang/core": "5.1.1 <= v < 6.0.0",
+        "elm-community/list-extra": "6.0.0 <= v < 7.0.0",
         "elm-community/result-extra": "2.2.0 <= v < 3.0.0"
     },
     "elm-version": "0.18.0 <= v < 0.19.0"

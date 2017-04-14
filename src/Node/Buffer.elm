@@ -1,12 +1,13 @@
 module Node.Buffer
     exposing
         ( Buffer
+        , fromString
         , toString
         )
 
 {-| Native bindings for Buffer module.
 
-@docs Buffer , toString
+@docs Buffer , fromString , toString
 
 -}
 
@@ -22,6 +23,13 @@ buffers are not copied automatically, they create a view above the root buffer
 -}
 type Buffer
     = Buffer
+
+
+{-| Convert a String to a Buffer.
+-}
+fromString : Encoding -> String -> Result String Buffer
+fromString encoding =
+    Native.Buffer.fromString (Common.encodingToString encoding)
 
 
 {-| Convert a Buffer to a String.
