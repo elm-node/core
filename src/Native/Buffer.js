@@ -2,10 +2,10 @@ const _elm_node$core$Native_Buffer = function () {
     const Ok = _elm_lang$core$Result$Ok
     const Err = _elm_lang$core$Result$Err
     const { Buffer } = require("buffer")
-    const { StringDecoder } = require( "string_decoder" )
+    const { StringDecoder } = require("string_decoder")
 
 
-    // fromString : Encoding -> String -> Result String Buffer
+    // fromString : String -> String -> Result String Buffer
     const fromString = F2((encoding, string) => {
         try {
             const buffer = Buffer.from(string, encoding)
@@ -14,7 +14,7 @@ const _elm_node$core$Native_Buffer = function () {
     })
 
 
-    // toString : Encoding -> Buffer -> Result String String
+    // toString : String -> Buffer -> Result String String
     const toString = F2((encoding, buffer) => {
         try {
             const decoder = new StringDecoder(encoding)

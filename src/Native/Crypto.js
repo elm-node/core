@@ -5,6 +5,7 @@ const _elm_node$core$Native_Crypto = function () {
     const { Buffer } = require("buffer")
 
 
+    // encrypt : String -> String -> Buffer -> Result String Buffer
     const encrypt = F3((algorithm, password, data) => {
         try {
             const cipher = crypto.createCipher(algorithm, password)
@@ -14,6 +15,7 @@ const _elm_node$core$Native_Crypto = function () {
     })
 
 
+    // decrypt : String -> String -> Buffer -> Result String Buffer
     const decrypt = F3((algorithm, password, data) => {
         try {
             const decipher = crypto.createDecipher(algorithm, password)

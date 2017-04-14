@@ -5,6 +5,7 @@
     "license": "Unlicense",
     "source-directories": [
         "src",
+        "test/Buffer",
         "test/Crypto",
         "test/FileSystem"
     ],
