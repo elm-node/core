@@ -1,0 +1,11 @@
+{
+    "name": "@elm-node/core",
+    "version": "1.0.0",
+    "description": "Native bindings to NodeJS's core libraries.",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": "elm-node/core",
+    "author": "Alexandre Gigliotti <alex@panosoft.com>",
+    "license": "Unlicense"
+}
