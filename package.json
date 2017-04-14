@@ -1,11 +1,21 @@
 {
-    "name": "@elm-node/core",
-    "version": "1.0.0",
-    "description": "Native bindings to NodeJS's core libraries.",
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "repository": "elm-node/core",
-    "author": "Alexandre Gigliotti <alex@panosoft.com>",
-    "license": "Unlicense"
+  "name": "@elm-node/core",
+  "version": "1.0.0",
+  "description": "Native bindings to NodeJS's core libraries.",
+  "scripts": {
+    "postinstall": "elm-npm-postinstall",
+    "preuninstall": "elm-npm-preinstall",
+    "test": "elm-make test/Main.elm --output test/main.js && node test/index.js"
+  },
+  "repository": "elm-node/core",
+  "author": "Alexandre Gigliotti <alex@panosoft.com>",
+  "license": "Unlicense",
+  "dependencies": {
+    "@elm-node/npm-scripts": "^1.0.0",
+    "ramda": "^0.23.0"
+  },
+  "devDependencies": {
+    "eslint": "^3.19.0",
+    "eslint-config-elm": "^1.0.0"
+  }
 }
