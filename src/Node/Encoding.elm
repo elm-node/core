@@ -1,0 +1,29 @@
+module Node.Encoding
+    exposing
+        ( Encoding(..)
+        , toString
+        )
+
+{-| String encodings supported by Node.js.
+
+@docs Encoding , toString
+
+-}
+
+import String
+
+
+{-| -}
+type Encoding
+    = Ascii
+    | Utf8
+    | Utf16le
+    | Base64
+    | Latin1
+    | Hex
+
+
+{-| -}
+toString : Encoding -> String
+toString =
+    Basics.toString >> String.toLower

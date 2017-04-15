@@ -1,7 +1,7 @@
 module Main exposing (main)
 
 import Node.Buffer as Buffer exposing (Buffer)
-import Node.Common as Common
+import Node.Encoding as Encoding
 import Result.Extra as Result
 import Task exposing (Task)
 
@@ -26,7 +26,7 @@ init =
             "hello"
 
         encoding =
-            Common.Utf8
+            Encoding.Utf8
     in
         model
             ! [ Ok ()
@@ -36,7 +36,7 @@ init =
                                 message =
                                     Debug.log "Testing" "Buffer.fromString"
                             in
-                                Buffer.fromString Common.Utf8 string
+                                Buffer.fromString Encoding.Utf8 string
                         )
                     |> Result.andThen
                         (\buffer ->
@@ -44,7 +44,7 @@ init =
                                 message =
                                     Debug.log "Testing" "Buffer.toString"
                             in
-                                Buffer.toString Common.Utf8 buffer
+                                Buffer.toString Encoding.Utf8 buffer
                         )
                     |> Result.andThen
                         (\bufferString ->

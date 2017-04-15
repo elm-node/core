@@ -1,7 +1,6 @@
 module Node.FileSystem
     exposing
-        ( Error(..)
-        , readFile
+        ( readFile
         , readFileAsString
         , readFileAsBuffer
         , writeFile
@@ -11,14 +10,15 @@ module Node.FileSystem
 
 {-| FileSystem
 
-@docs Error , readFile , readFileAsString , readFileAsBuffer , writeFile , writeFileFromString , writeFileFromBuffer
+@docs readFile , readFileAsString , readFileAsBuffer , writeFile , writeFileFromString , writeFileFromBuffer
 
 -}
 
 import Node.Buffer exposing (Buffer)
-import Node.Common as Common exposing (Encoding(..))
+import Node.Error as Error exposing (Error(..))
+import Node.Encoding as Encoding exposing (Encoding(..))
+import Node.FileSystem.LowLevel as LowLevel
 import Task exposing (Task)
-import Native.FileSystem
 
 
 {-| Default encoding.
@@ -42,24 +42,6 @@ defaultMode =
     "666"
 
 
-{-| -}
-type Error
-    = PermissionDenied -- EACCES
-    | OperationNotPermitted -- EPERM
-    | NoSuchFileOrDirectory -- ENOENT
-    | NotADirectory -- ENOTDIR
-    | IsADirectory -- EISDIR
-    | DirectoryNotEmpty -- ENOTEMPTY
-    | FileExists -- EEEXIST
-    | FileTooLarge -- EFBIG
-    | FilenameTooLong -- ENAMETOOLONG
-    | TooManyOpenFiles -- EMFILE, ENFILE
-    | NotEnoughSpace -- ENOMEM, ENOSPC
-    | DiskQuotaExceeded -- EDQUOT
-    | ReadOnlyFileSystem -- EROFS
-    | Error String -- anything else
-
-
 
 -- READ
 
@@ -67,19 +49,22 @@ type Error
 {-| -}
 readFile : String -> Task Error String
 readFile filename =
-    Native.FileSystem.readFileAsString filename (Common.encodingToString defaultEncoding)
+    LowLevel.readFileAsString filename (Encoding.toString defaultEncoding)
+        |> Task.mapError Error.fromValue
 
 
 {-| -}
 readFileAsString : String -> Encoding -> Task Error String
 readFileAsString filename encoding =
-    Native.FileSystem.readFileAsString filename (Common.encodingToString encoding)
+    LowLevel.readFileAsString filename (Encoding.toString encoding)
+        |> Task.mapError Error.fromValue
 
 
 {-| -}
 readFileAsBuffer : String -> Task Error Buffer
-readFileAsBuffer =
-    Native.FileSystem.readFileAsBuffer
+readFileAsBuffer filename =
+    LowLevel.readFileAsBuffer filename
+        |> Task.mapError Error.fromValue
 
 
 
@@ -89,17 +74,20 @@ readFileAsBuffer =
 {-| Write a file.
 -}
 writeFile : String -> String -> Task Error ()
-writeFile filename =
-    Native.FileSystem.writeFileFromString filename defaultMode (Common.encodingToString defaultEncoding)
+writeFile filename data =
+    LowLevel.writeFileFromString filename defaultMode (Encoding.toString defaultEncoding) data
+        |> Task.mapError Error.fromValue
 
 
 {-| -}
 writeFileFromString : String -> Mode -> Encoding -> String -> Task Error ()
-writeFileFromString filename mode encoding =
-    Native.FileSystem.writeFileFromString filename mode (Common.encodingToString encoding)
+writeFileFromString filename mode encoding data =
+    LowLevel.writeFileFromString filename mode (Encoding.toString encoding) data
+        |> Task.mapError Error.fromValue
 
 
 {-| -}
 writeFileFromBuffer : String -> Mode -> Buffer -> Task Error ()
-writeFileFromBuffer =
-    Native.FileSystem.writeFileFromBuffer
+writeFileFromBuffer filename mode data =
+    LowLevel.writeFileFromBuffer filename mode data
+        |> Task.mapError Error.fromValue

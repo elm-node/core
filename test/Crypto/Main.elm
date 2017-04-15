@@ -1,7 +1,7 @@
 module Main exposing (main)
 
 import Node.Buffer as Buffer exposing (Buffer)
-import Node.Common as Common
+import Node.Encoding as Encoding
 import Node.Crypto as Crypto
 import Result.Extra as Result
 import Task exposing (Task)
@@ -33,7 +33,7 @@ init =
             "hello"
 
         encoding =
-            Common.Utf8
+            Encoding.Utf8
 
         buffer =
             Buffer.fromString encoding string

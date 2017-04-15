@@ -12,6 +12,8 @@
     "exposed-modules": [
         "Node.Buffer",
         "Node.Crypto",
+        "Node.Encoding",
+        "Node.Error",
         "Node.FileSystem"
     ],
     "native-modules": true,

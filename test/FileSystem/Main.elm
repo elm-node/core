@@ -1,14 +1,15 @@
 module Main exposing (main)
 
 import Node.Buffer as Buffer
-import Node.Common as Common
+import Node.Error as Common exposing (Error(..))
+import Node.Encoding as Encoding
 import Node.FileSystem as FileSystem
 import Result.Extra as Result
 import Task exposing (Task)
 
 
 type Msg
-    = TestComplete (Result FileSystem.Error ())
+    = TestComplete (Result Error ())
 
 
 type alias Model =
@@ -51,9 +52,9 @@ init =
                                     Debug.log "Testing" "writeFileFromString"
                             in
                                 if string /= "writeFile" then
-                                    Task.fail <| FileSystem.Error "readFile"
+                                    Task.fail <| Error "readFile" ""
                                 else
-                                    FileSystem.writeFileFromString filename "666" Common.Utf8 "writeFileFromString"
+                                    FileSystem.writeFileFromString filename "666" Encoding.Utf8 "writeFileFromString"
                         )
                     |> Task.andThen
                         (\_ ->
@@ -61,7 +62,7 @@ init =
                                 log =
                                     Debug.log "Testing" "readFileAsString"
                             in
-                                FileSystem.readFileAsString filename Common.Utf8
+                                FileSystem.readFileAsString filename Encoding.Utf8
                         )
                     |> Task.andThen
                         (\string ->
@@ -70,7 +71,7 @@ init =
                                     Debug.log "Testing" "readFileAsBuffer"
                             in
                                 if string /= "writeFileFromString" then
-                                    Task.fail <| FileSystem.Error "readFileAsString"
+                                    Task.fail <| Error "readFileAsString" ""
                                 else
                                     FileSystem.readFileAsBuffer filename
                         )
@@ -80,16 +81,16 @@ init =
                                 log =
                                     Debug.log "Testing" "bufferToString"
                             in
-                                Buffer.toString Common.Utf8 buffer
+                                Buffer.toString Encoding.Utf8 buffer
                                     |> Result.unpack
-                                        (FileSystem.Error >> Task.fail)
+                                        (flip (Error) "" >> Task.fail)
                                         (\string ->
                                             let
                                                 log =
                                                     Debug.log "Testing" "writeFileFromBuffer"
                                             in
                                                 if string /= "writeFileFromString" then
-                                                    Task.fail <| FileSystem.Error "readFileAsString"
+                                                    Task.fail <| Error "readFileAsString" ""
                                                 else
                                                     FileSystem.writeFileFromBuffer filename "666" buffer
                                         )
@@ -101,7 +102,7 @@ init =
                     |> Task.andThen
                         (\string ->
                             if string /= "writeFileFromString" then
-                                Task.fail <| FileSystem.Error "readFileAsString"
+                                Task.fail <| Error "readFileAsString" ""
                             else
                                 Task.succeed ()
                         )

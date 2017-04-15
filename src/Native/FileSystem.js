@@ -12,44 +12,20 @@ const _elm_node$core$Native_FileSystem = function () {
     const octalStringToInt = string => parseInt(string, 8)
 
 
-    // toError : Node.Error -> Error
-    const toError = error => {
-        // errorMap : List ( Error.ctor, List Node.Error.code )
-        const errorMap =
-            [ [ "PermissionDenied", [ "EACCES" ] ]
-            , [ "OperationNotPermitted", [ "EPERM" ] ]
-            , [ "NoSuchFileOrDirectory", [ "ENOENT" ] ]
-            , [ "NotADirectory", [ "ENOTDIR" ] ]
-            , [ "IsADirectory", [ "EISDIR" ] ]
-            , [ "DirectoryNotEmpty", [ "ENOTEMPTY" ] ]
-            , [ "FileExists", [ "EEEXIST" ] ]
-            , [ "FileTooLarge", [ "EFBIG" ] ]
-            , [ "FilenameTooLong", [ "ENAMETOOLONG" ] ]
-            , [ "TooManyOpenFiles", [ "EMFILE", "ENFILE" ] ]
-            , [ "NotEnoughSpace", [ "ENOMEM", "ENOSPC" ] ]
-            , [ "DiskQuotaExceeded", [ "EDQUOT" ] ]
-            , [ "ReadOnlyFileSystem", [ "EROFS" ] ]
-            ]
-        const generic = "Error"
-        const ctor = R.find(item => R.contains(error.code, item[1]), errorMap)
-        return ctor ? { ctor } : { ctor : generic, _0 : error.message }
-    }
-
-
     // READ
 
 
     const readFile = (filename, encoding) => nativeBinding(callback => {
         try {
             fs.readFile(filename, encoding, (error, data) => {
-                if (error) return callback(fail(toError(error)))
+                if (error) return callback(fail(error))
                 return callback(succeed(data))
             })
-        } catch (error) { callback(fail(toError(error))) }
+        } catch (error) { callback(fail(error)) }
     })
 
 
-    // readFileAsString : String -> Encoding -> Task Error String
+    // readFileAsString : String -> String -> Task Error String
     const readFileAsString = F2(readFile)
 
 
@@ -67,10 +43,10 @@ const _elm_node$core$Native_FileSystem = function () {
                 , mode : octalStringToInt(mode)
                 }
             fs.writeFile(filename, data, options, error => {
-                if (error) return callback(fail(toError(error)))
+                if (error) return callback(fail(error))
                 return callback(succeed(Tuple0))
             })
-        } catch (error) { return callback(fail(toError(error))) }
+        } catch (error) { return callback(fail(error)) }
     })
 
 

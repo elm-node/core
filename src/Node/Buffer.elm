@@ -11,7 +11,7 @@ module Node.Buffer
 
 -}
 
-import Node.Common as Common exposing (Encoding)
+import Node.Encoding as Encoding exposing (Encoding)
 import Native.Buffer
 
 
@@ -29,11 +29,11 @@ type Buffer
 -}
 fromString : Encoding -> String -> Result String Buffer
 fromString encoding =
-    Native.Buffer.fromString (Common.encodingToString encoding)
+    Native.Buffer.fromString (Encoding.toString encoding)
 
 
 {-| Convert a Buffer to a String.
 -}
 toString : Encoding -> Buffer -> Result String String
 toString encoding =
-    Native.Buffer.toString (Common.encodingToString encoding)
+    Native.Buffer.toString (Encoding.toString encoding)

@@ -1,7 +1,7 @@
 {
     "name": "@elm-node/core",
     "version": "1.0.0",
-    "description": "Native bindings to NodeJS's core libraries.",
+    "description": "Native bindings to Node.js's core libraries.",
     "scripts": {
         "postinstall": "elm-npm-postinstall",
         "preuninstall": "elm-npm-preinstall",
