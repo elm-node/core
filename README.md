@@ -5,13 +5,10 @@
 
 # Todo
 
-- [x] test Buffer
-- [x] bring in raw node error object via decoder and toError in Elm
-- [x] put Errors in Common so that all modules can use it (FileSystem, Http)
-- [x] move Node.Common.Error code to Node.Error(s)
-- [x] move Node.Common.Encoding code to Node.Encoding
+- [x] implement LowLevel for all modules
 - [ ] decode Error.code to union type
+    include exhaustive list of system errors
+    will be nice so we can case on them since in certain circumstances we want to react differently (like if file doesn't exist)
 - [ ] test Error
 - [ ] test Encoding
-- [ ] consider LowLevel for all modules
 - [ ] document

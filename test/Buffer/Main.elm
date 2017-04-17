@@ -2,12 +2,13 @@ module Main exposing (main)
 
 import Node.Buffer as Buffer exposing (Buffer)
 import Node.Encoding as Encoding
+import Node.Error as Error
 import Result.Extra as Result
 import Task exposing (Task)
 
 
 type Msg
-    = TestComplete (Result String ())
+    = TestComplete (Result Error.Error ())
 
 
 type alias Model =
@@ -49,7 +50,7 @@ init =
                     |> Result.andThen
                         (\bufferString ->
                             if bufferString /= string then
-                                Err <| "Buffer.toString failed: " ++ bufferString
+                                Err <| Error.Error ("Buffer.toString failed: " ++ bufferString) ""
                             else
                                 Ok ()
                         )

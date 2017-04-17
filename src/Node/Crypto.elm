@@ -11,10 +11,11 @@ module Node.Crypto
 
 -}
 
-import List.Extra as List
 import Node.Buffer as Buffer exposing (Buffer)
+import Node.Crypto.LowLevel as LowLevel
+import Node.Error as Error exposing (Error(..))
+import List.Extra as List
 import Tuple
-import Native.Crypto
 
 
 {- Notes:
@@ -184,23 +185,31 @@ cipherMap =
     ]
 
 
-cipherToString : Cipher -> Result String String
+cipherToString : Cipher -> Result Error String
 cipherToString cipher =
     cipherMap
         |> List.find (Tuple.first >> (==) cipher)
         |> Maybe.map (Tuple.second >> Ok)
-        |> Maybe.withDefault (Err "Cipher could not be found.")
+        |> Maybe.withDefault (Err <| Error "Cipher could not be found." "")
 
 
 {-| -}
-encrypt : Cipher -> String -> Buffer -> Result String Buffer
+encrypt : Cipher -> String -> Buffer -> Result Error Buffer
 encrypt cipher password buffer =
     cipherToString cipher
-        |> Result.andThen (\algorithm -> Native.Crypto.encrypt algorithm password buffer)
+        |> Result.andThen
+            (\algorithm ->
+                LowLevel.encrypt algorithm password buffer
+                    |> Result.mapError Error.fromValue
+            )
 
 
 {-| -}
-decrypt : Cipher -> String -> Buffer -> Result String Buffer
+decrypt : Cipher -> String -> Buffer -> Result Error Buffer
 decrypt cipher password buffer =
     cipherToString cipher
-        |> Result.andThen (\algorithm -> Native.Crypto.decrypt algorithm password buffer)
+        |> Result.andThen
+            (\algorithm ->
+                LowLevel.decrypt algorithm password buffer
+                    |> Result.mapError Error.fromValue
+            )

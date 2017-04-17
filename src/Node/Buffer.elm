@@ -11,8 +11,9 @@ module Node.Buffer
 
 -}
 
+import Node.Buffer.LowLevel as LowLevel exposing (Buffer)
 import Node.Encoding as Encoding exposing (Encoding)
-import Native.Buffer
+import Node.Error as Error exposing (Error)
 
 
 {-| Buffer
@@ -21,19 +22,21 @@ buffer is an instance of Uint8Array
 buffers are not copied automatically, they create a view above the root buffer
 
 -}
-type Buffer
-    = Buffer
+type alias Buffer =
+    LowLevel.Buffer
 
 
 {-| Convert a String to a Buffer.
 -}
-fromString : Encoding -> String -> Result String Buffer
-fromString encoding =
-    Native.Buffer.fromString (Encoding.toString encoding)
+fromString : Encoding -> String -> Result Error Buffer
+fromString encoding data =
+    LowLevel.fromString (Encoding.toString encoding) data
+        |> Result.mapError Error.fromValue
 
 
 {-| Convert a Buffer to a String.
 -}
-toString : Encoding -> Buffer -> Result String String
-toString encoding =
-    Native.Buffer.toString (Encoding.toString encoding)
+toString : Encoding -> Buffer -> Result Error String
+toString encoding data =
+    LowLevel.toString (Encoding.toString encoding) data
+        |> Result.mapError Error.fromValue

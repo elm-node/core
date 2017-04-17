@@ -83,7 +83,7 @@ init =
                             in
                                 Buffer.toString Encoding.Utf8 buffer
                                     |> Result.unpack
-                                        (flip (Error) "" >> Task.fail)
+                                        Task.fail
                                         (\string ->
                                             let
                                                 log =

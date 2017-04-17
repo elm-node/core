@@ -2,13 +2,14 @@ module Main exposing (main)
 
 import Node.Buffer as Buffer exposing (Buffer)
 import Node.Encoding as Encoding
+import Node.Error as Error exposing (Error(..))
 import Node.Crypto as Crypto
 import Result.Extra as Result
 import Task exposing (Task)
 
 
 type Msg
-    = TestComplete (Result String ())
+    = TestComplete (Result Error ())
 
 
 type alias Model =
@@ -40,7 +41,7 @@ init =
     in
         case buffer of
             Err error ->
-                Debug.crash error
+                Debug.crash (toString error)
 
             Ok buffer ->
                 model
@@ -61,7 +62,7 @@ init =
                                                 |> Result.withDefault ""
                                     in
                                         if encryptedString == string then
-                                            Err <| "Encryption failed: " ++ encryptedString
+                                            Err <| Error ("Encryption failed: " ++ encryptedString) ""
                                         else
                                             let
                                                 message =
@@ -77,7 +78,7 @@ init =
                                                 |> Result.withDefault ""
                                     in
                                         if decryptedString /= string then
-                                            Err <| "Decryption failed: " ++ decryptedString
+                                            Err <| Error ("Decryption failed: " ++ decryptedString) ""
                                         else
                                             Ok ()
                                 )
