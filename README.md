@@ -3,10 +3,17 @@
 > Native bindings to Node.js's core libraries.
 
 
+# Install
+
+```
+npm install elm-node/core
+```
+
+
+# Api
+
+
+
 # Todo
 
-- [x] implement LowLevel for all modules
-- [x] decode Error.code to union type
-- [ ] test Error
-- [ ] test Encoding
 - [ ] document

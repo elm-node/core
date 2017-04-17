@@ -6,6 +6,7 @@ module Node.Crypto.LowLevel
 
 import Node.Buffer exposing (Buffer)
 import Json.Decode as Decode
+import Native.Crypto
 
 
 encrypt : String -> String -> Buffer -> Result Decode.Value Buffer

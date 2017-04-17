@@ -69,7 +69,7 @@ errorDecoder =
 fromValue : Decode.Value -> Error
 fromValue value =
     Decode.decodeValue errorDecoder value
-        |> Result.extract (\error -> Error "Decoding Error value failed." "")
+        |> Result.extract (\error -> Error "Decoding Error value failed." error)
 
 
 {-| -}

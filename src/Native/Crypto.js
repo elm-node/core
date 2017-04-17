@@ -11,7 +11,7 @@ const _elm_node$core$Native_Crypto = function () {
             const cipher = crypto.createCipher(algorithm, password)
             const encrypted = Buffer.concat([ cipher.update(data), cipher.final() ])
             return Ok(encrypted)
-        } catch (error) { return Err(error.message) }
+        } catch (error) { return Err(error) }
     })
 
 
@@ -21,7 +21,7 @@ const _elm_node$core$Native_Crypto = function () {
             const decipher = crypto.createDecipher(algorithm, password)
             const decrypted = Buffer.concat([ decipher.update(data), decipher.final() ])
             return Ok(decrypted)
-        } catch (error) { return Err(error.message) }
+        } catch (error) { return Err(error) }
     })
 
 

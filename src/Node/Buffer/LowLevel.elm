@@ -6,6 +6,7 @@ module Node.Buffer.LowLevel
         )
 
 import Json.Decode as Decode
+import Native.Buffer
 
 
 type Buffer
@@ -13,10 +14,10 @@ type Buffer
 
 
 fromString : String -> String -> Result Decode.Value Buffer
-fromString encoding =
+fromString =
     Native.Buffer.fromString
 
 
 toString : String -> Buffer -> Result Decode.Value String
-toString encoding =
+toString =
     Native.Buffer.toString

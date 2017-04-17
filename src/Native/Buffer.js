@@ -10,7 +10,7 @@ const _elm_node$core$Native_Buffer = function () {
         try {
             const buffer = Buffer.from(string, encoding)
             return Ok(buffer)
-        } catch (error) { return Err(error.message) }
+        } catch (error) { return Err(error) }
     })
 
 
@@ -20,7 +20,7 @@ const _elm_node$core$Native_Buffer = function () {
             const decoder = new StringDecoder(encoding)
             const string = decoder.end(buffer)
             return Ok(string)
-        } catch (error) { return Err(error.message) }
+        } catch (error) { return Err(error) }
     })
 
 
