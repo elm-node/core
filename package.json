@@ -4,7 +4,7 @@
     "description": "Native bindings to Node.js's core libraries.",
     "scripts": {
         "postinstall": "elm-npm-postinstall",
-        "preuninstall": "elm-npm-preinstall",
+        "preuninstall": "elm-npm-preuninstall",
         "test": "npm-run-all test:*",
         "test:Buffer": "elm-make test/Buffer/Main.elm --output test/Buffer/main.js && node test/Buffer/index.js",
         "test:Crypto": "elm-make test/Crypto/Main.elm --output test/Crypto/main.js && node test/Crypto/index.js",
@@ -14,8 +14,7 @@
     "author": "Alexandre Gigliotti <alex@panosoft.com>",
     "license": "Unlicense",
     "dependencies": {
-        "@elm-node/npm-scripts": "^1.0.0",
-        "ramda": "^0.23.0"
+        "@elm-node/npm-scripts": "^1.0.0"
     },
     "devDependencies": {
         "eslint": "^3.19.0",

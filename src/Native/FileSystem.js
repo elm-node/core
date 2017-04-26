@@ -1,6 +1,5 @@
 const _elm_node$core$Native_FileSystem = function () {
     const fs = require( "fs" )
-    const R = require( "ramda" )
     const { nativeBinding, succeed, fail } = _elm_lang$core$Native_Scheduler
     const { Tuple0 } = _elm_lang$core$Native_Utils
 

@@ -2,7 +2,6 @@ module Node.FileSystem
     exposing
         ( readFile
         , readFileAsString
-        , readFileAsBuffer
         , writeFile
         , writeFileFromString
         , writeFileFromBuffer
@@ -10,7 +9,7 @@ module Node.FileSystem
 
 {-| FileSystem
 
-@docs readFile , readFileAsString , readFileAsBuffer , writeFile , writeFileFromString , writeFileFromBuffer
+@docs readFile , readFileAsString , writeFile , writeFileFromString , writeFileFromBuffer
 
 -}
 
@@ -47,9 +46,9 @@ defaultMode =
 
 
 {-| -}
-readFile : String -> Task Error String
+readFile : String -> Task Error Buffer
 readFile filename =
-    LowLevel.readFileAsString filename (Encoding.toString defaultEncoding)
+    LowLevel.readFileAsBuffer filename
         |> Task.mapError Error.fromValue
 
 
@@ -60,22 +59,15 @@ readFileAsString filename encoding =
         |> Task.mapError Error.fromValue
 
 
-{-| -}
-readFileAsBuffer : String -> Task Error Buffer
-readFileAsBuffer filename =
-    LowLevel.readFileAsBuffer filename
-        |> Task.mapError Error.fromValue
-
-
 
 -- WRITE
 
 
 {-| Write a file.
 -}
-writeFile : String -> String -> Task Error ()
+writeFile : String -> Buffer -> Task Error ()
 writeFile filename data =
-    LowLevel.writeFileFromString filename defaultMode (Encoding.toString defaultEncoding) data
+    LowLevel.writeFileFromBuffer filename defaultMode data
         |> Task.mapError Error.fromValue
 
 

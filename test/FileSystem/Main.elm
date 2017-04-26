@@ -26,6 +26,16 @@ init =
     let
         filename =
             "test/output.txt"
+
+        data =
+            "data"
+
+        encoding =
+            Encoding.Utf8
+
+        buffer =
+            Buffer.fromString encoding data
+                |> Result.extract (\_ -> Debug.crash "Failed to create buffer")
     in
         model
             ! [ Task.succeed ()
@@ -35,7 +45,8 @@ init =
                                 log =
                                     Debug.log "Testing" "writeFile"
                             in
-                                FileSystem.writeFile filename "writeFile"
+                                FileSystem.writeFile filename buffer
+                                    |> Task.map (always (Debug.log "Complete" "writeFile") >> always ())
                         )
                     |> Task.andThen
                         (\_ ->
@@ -44,6 +55,22 @@ init =
                                     Debug.log "Testing" "readFile"
                             in
                                 FileSystem.readFile filename
+                                    |> Task.andThen
+                                        (\buffer ->
+                                            let
+                                                string =
+                                                    Buffer.toString encoding buffer
+                                                        |> Result.extract (\_ -> Debug.crash "Failed to create string")
+                                            in
+                                                if string == data then
+                                                    let
+                                                        message =
+                                                            Debug.log "Complete" "readFile"
+                                                    in
+                                                        Task.succeed ()
+                                                else
+                                                    Task.fail <| Error "Failed" "readFile"
+                                        )
                         )
                     |> Task.andThen
                         (\string ->
@@ -51,10 +78,8 @@ init =
                                 log =
                                     Debug.log "Testing" "writeFileFromString"
                             in
-                                if string /= "writeFile" then
-                                    Task.fail <| Error "readFile" ""
-                                else
-                                    FileSystem.writeFileFromString filename "666" Encoding.Utf8 "writeFileFromString"
+                                FileSystem.writeFileFromString filename "666" encoding "writeFileFromString"
+                                    |> Task.map (always (Debug.log "Complete" "writeFileFromString") >> always ())
                         )
                     |> Task.andThen
                         (\_ ->
@@ -62,49 +87,23 @@ init =
                                 log =
                                     Debug.log "Testing" "readFileAsString"
                             in
-                                FileSystem.readFileAsString filename Encoding.Utf8
-                        )
-                    |> Task.andThen
-                        (\string ->
-                            let
-                                log =
-                                    Debug.log "Testing" "readFileAsBuffer"
-                            in
-                                if string /= "writeFileFromString" then
-                                    Task.fail <| Error "readFileAsString" ""
-                                else
-                                    FileSystem.readFileAsBuffer filename
-                        )
-                    |> Task.andThen
-                        (\buffer ->
-                            let
-                                log =
-                                    Debug.log "Testing" "bufferToString"
-                            in
-                                Buffer.toString Encoding.Utf8 buffer
-                                    |> Result.unpack
-                                        Task.fail
+                                FileSystem.readFileAsString filename encoding
+                                    |> Task.andThen
                                         (\string ->
-                                            let
-                                                log =
-                                                    Debug.log "Testing" "writeFileFromBuffer"
-                                            in
-                                                if string /= "writeFileFromString" then
-                                                    Task.fail <| Error "readFileAsString" ""
-                                                else
-                                                    FileSystem.writeFileFromBuffer filename "666" buffer
+                                            if string == "writeFileFromString" then
+                                                let
+                                                    message =
+                                                        Debug.log "Complete" "readFileAsString"
+                                                in
+                                                    Task.succeed ()
+                                            else
+                                                Task.fail <| Error "Failed" "readFile"
                                         )
                         )
                     |> Task.andThen
                         (\_ ->
-                            FileSystem.readFile filename
-                        )
-                    |> Task.andThen
-                        (\string ->
-                            if string /= "writeFileFromString" then
-                                Task.fail <| Error "readFileAsString" ""
-                            else
-                                Task.succeed ()
+                            FileSystem.writeFileFromBuffer filename "666" buffer
+                                |> Task.map (always (Debug.log "Complete" "writeFileFromString") >> always ())
                         )
                     |> Task.attempt TestComplete
               ]
