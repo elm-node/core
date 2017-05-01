@@ -190,7 +190,7 @@ cipherToString cipher =
     cipherMap
         |> List.find (Tuple.first >> (==) cipher)
         |> Maybe.map (Tuple.second >> Ok)
-        |> Maybe.withDefault (Err <| Error "Cipher could not be found." "")
+        |> Maybe.withDefault (Err <| Error "Crypto" "Cipher could not be found.")
 
 
 {-| -}

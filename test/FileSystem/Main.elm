@@ -25,7 +25,7 @@ init : ( Model, Cmd Msg )
 init =
     let
         filename =
-            "test/output.txt"
+            "test/FileSystem/output.txt"
 
         data =
             "data"
@@ -104,6 +104,11 @@ init =
                         (\_ ->
                             FileSystem.writeFileFromBuffer filename "666" buffer
                                 |> Task.map (always (Debug.log "Complete" "writeFileFromString") >> always ())
+                        )
+                    |> Task.andThen
+                        (\_ ->
+                            FileSystem.copy (filename ++ "c") filename
+                                |> Task.map (always (Debug.log "Complete" "copy") >> always ())
                         )
                     |> Task.attempt TestComplete
               ]

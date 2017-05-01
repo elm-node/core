@@ -1,6 +1,7 @@
 module Node.FileSystem
     exposing
-        ( readFile
+        ( copy
+        , readFile
         , readFileAsString
         , writeFile
         , writeFileFromString
@@ -9,7 +10,7 @@ module Node.FileSystem
 
 {-| FileSystem
 
-@docs readFile , readFileAsString , writeFile , writeFileFromString , writeFileFromBuffer
+@docs copy , readFile , readFileAsString , writeFile , writeFileFromString , writeFileFromBuffer
 
 -}
 
@@ -17,6 +18,10 @@ import Node.Buffer exposing (Buffer)
 import Node.Error as Error exposing (Error(..))
 import Node.Encoding as Encoding exposing (Encoding(..))
 import Node.FileSystem.LowLevel as LowLevel
+import Dict exposing (Dict)
+import Json.Decode as Decode
+import List.Extra as List
+import Result.Extra as Result
 import Task exposing (Task)
 
 
@@ -39,6 +44,54 @@ Read and write permissions for user, group, and others.
 defaultMode : String
 defaultMode =
     "666"
+
+
+
+-- COPY
+{-
+
+   if no error -> Task.succeed <| Dict String (Result Error ())
+   if error.list -> Task.succeed <| Dict String (Result Error ())
+   if no error list -> Task.fail Error
+
+   decode error
+   decode object, files array, error array
+   intersect files array and error array to create Dict of results
+-}
+
+
+{-| -}
+copy : String -> String -> Task Error (Dict String (Result Error ()))
+copy to from =
+    let
+        decode =
+            Decode.decodeValue <|
+                Decode.map2
+                    (\errors files -> { errors = errors, files = files })
+                    (Decode.field "errors" <| Decode.list Error.decoder)
+                    (Decode.field "files" <| Decode.list Decode.string)
+    in
+        LowLevel.copy to from
+            |> Task.mapError Error.fromValue
+            |> Task.andThen (decode >> Result.unpack (Error "FileSystem" >> Task.fail) Task.succeed)
+            |> Task.map
+                (\{ errors, files } ->
+                    List.foldl
+                        (\filename results ->
+                            let
+                                error =
+                                    List.find (Error.message >> String.contains filename) errors
+
+                                result =
+                                    error
+                                        |> Maybe.map Err
+                                        |> Maybe.withDefault (Ok ())
+                            in
+                                Dict.insert filename result results
+                        )
+                        Dict.empty
+                        files
+                )
 
 
 

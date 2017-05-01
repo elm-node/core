@@ -1,13 +1,15 @@
 module Node.Error
     exposing
         ( Error(..)
+        , message
+        , decoder
         , fromValue
         , Code(..)
         )
 
 {-| Error type.
 
-@docs Error , fromValue , Code
+@docs Error , message , decoder , fromValue , Code
 
 -}
 
@@ -31,8 +33,20 @@ type Error
         }
 
 
-errorDecoder : Decode.Decoder Error
-errorDecoder =
+{-| -}
+message : Error -> String
+message error =
+    case error of
+        Error message _ ->
+            message
+
+        SystemError { message } ->
+            message
+
+
+{-| -}
+decoder : Decode.Decoder Error
+decoder =
     Decode.maybe (Decode.field "code" Decode.string)
         |> Decode.andThen
             (\code ->
@@ -68,7 +82,7 @@ errorDecoder =
 {-| -}
 fromValue : Decode.Value -> Error
 fromValue value =
-    Decode.decodeValue errorDecoder value
+    Decode.decodeValue decoder value
         |> Result.extract (\error -> Error "Decoding Error value failed." error)
 
 
