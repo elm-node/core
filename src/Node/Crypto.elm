@@ -3,11 +3,12 @@ module Node.Crypto
         ( Cipher(..)
         , decrypt
         , encrypt
+        , randomBytes
         )
 
 {-| Native bindings for node's Crypto module.
 
-@docs Cipher , decrypt , encrypt
+@docs Cipher , decrypt , encrypt , randomBytes
 
 -}
 
@@ -15,6 +16,7 @@ import Node.Buffer as Buffer exposing (Buffer)
 import Node.Crypto.LowLevel as LowLevel
 import Node.Error as Error exposing (Error(..))
 import List.Extra as List
+import Task exposing (Task)
 import Tuple
 
 
@@ -213,3 +215,10 @@ decrypt cipher password buffer =
                 LowLevel.decrypt algorithm password buffer
                     |> Result.mapError Error.fromValue
             )
+
+
+{-| -}
+randomBytes : Int -> Task Error Buffer
+randomBytes size =
+    LowLevel.randomBytes size
+        |> Task.mapError Error.fromValue

@@ -53,36 +53,49 @@ init =
                                             Debug.log "Testing" "Crypto.encrypt"
                                     in
                                         Crypto.encrypt cipher password buffer
+                                            |> Result.andThen
+                                                (\buffer ->
+                                                    let
+                                                        encryptedString =
+                                                            Buffer.toString encoding buffer
+                                                                |> Result.withDefault ""
+                                                    in
+                                                        if encryptedString == string then
+                                                            Err <| Error ("Encryption failed: " ++ encryptedString) ""
+                                                        else
+                                                            Ok buffer
+                                                )
                                 )
                             |> Result.andThen
                                 (\buffer ->
                                     let
-                                        encryptedString =
-                                            Buffer.toString encoding buffer
-                                                |> Result.withDefault ""
+                                        message =
+                                            Debug.log "Testing" "Crypto.decrypt"
                                     in
-                                        if encryptedString == string then
-                                            Err <| Error ("Encryption failed: " ++ encryptedString) ""
-                                        else
-                                            let
-                                                message =
-                                                    Debug.log "Testing" "Crypto.decrypt"
-                                            in
-                                                Crypto.decrypt cipher password buffer
-                                )
-                            |> Result.andThen
-                                (\buffer ->
-                                    let
-                                        decryptedString =
-                                            Buffer.toString encoding buffer
-                                                |> Result.withDefault ""
-                                    in
-                                        if decryptedString /= string then
-                                            Err <| Error ("Decryption failed: " ++ decryptedString) ""
-                                        else
-                                            Ok ()
+                                        Crypto.decrypt cipher password buffer
+                                            |> Result.andThen
+                                                (\buffer ->
+                                                    let
+                                                        decryptedString =
+                                                            Buffer.toString encoding buffer
+                                                                |> Result.withDefault ""
+                                                    in
+                                                        if decryptedString /= string then
+                                                            Err <| Error ("Decryption failed: " ++ decryptedString) ""
+                                                        else
+                                                            Ok ()
+                                                )
                                 )
                             |> Result.unpack Task.fail Task.succeed
+                            |> Task.andThen
+                                (\_ ->
+                                    let
+                                        message =
+                                            Debug.log "Testing" "randomBytes"
+                                    in
+                                        Crypto.randomBytes 4
+                                            |> Task.map (always ())
+                                )
                             |> Task.attempt TestComplete
                       ]
 

@@ -8,7 +8,8 @@
     "test": "npm-run-all test:*",
     "test:Buffer": "elm-make test/Buffer/Main.elm --output test/Buffer/main.js && node test/Buffer/index.js",
     "test:Crypto": "elm-make test/Crypto/Main.elm --output test/Crypto/main.js && node test/Crypto/index.js",
-    "test:FileSystem": "elm-make test/FileSystem/Main.elm --output test/FileSystem/main.js && node test/FileSystem/index.js"
+    "test:FileSystem": "elm-make test/FileSystem/Main.elm --output test/FileSystem/main.js && node test/FileSystem/index.js",
+    "test:Global": "elm-make test/Global/Main.elm --output test/Global/main.js && node test/Global/index.js"
   },
   "repository": "elm-node/core",
   "author": "Alexandre Gigliotti <alex@panosoft.com>",
