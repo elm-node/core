@@ -3,6 +3,7 @@ module Node.FileSystem.LowLevel
         ( copy
         , readFileAsString
         , readFileAsBuffer
+        , remove
         , writeFileFromString
         , writeFileFromBuffer
         )
@@ -48,6 +49,11 @@ readFileAsString =
 readFileAsBuffer : String -> Task Decode.Value Buffer
 readFileAsBuffer =
     Native.FileSystem.readFileAsBuffer
+
+
+remove : String -> Task Decode.Value ()
+remove =
+    Native.FileSystem.remove
 
 
 writeFileFromString : String -> String -> String -> String -> Task Decode.Value ()

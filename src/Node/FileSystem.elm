@@ -3,6 +3,7 @@ module Node.FileSystem
         ( copy
         , readFile
         , readFileAsString
+        , remove
         , writeFile
         , writeFileFromString
         , writeFileFromBuffer
@@ -10,7 +11,7 @@ module Node.FileSystem
 
 {-| FileSystem
 
-@docs copy , readFile , readFileAsString , writeFile , writeFileFromString , writeFileFromBuffer
+@docs copy , readFile , readFileAsString , remove , writeFile , writeFileFromString , writeFileFromBuffer
 
 -}
 
@@ -93,6 +94,17 @@ readFile filename =
 readFileAsString : String -> Encoding -> Task Error String
 readFileAsString filename encoding =
     LowLevel.readFileAsString filename (Encoding.toString encoding)
+        |> Task.mapError Error.fromValue
+
+
+
+-- REMOVE
+
+
+{-| -}
+remove : String -> Task Error ()
+remove filename =
+    LowLevel.remove filename
         |> Task.mapError Error.fromValue
 
 

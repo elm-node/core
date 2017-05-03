@@ -3,6 +3,7 @@ const _elm_node$core$Native_FileSystem = function () {
     const fs = require( "fs" )
     const mkdirp = require("mkdirp")
     const path = require("path")
+    const rm = require("rimraf")
     const { nativeBinding, succeed, fail } = _elm_lang$core$Native_Scheduler
     const { Tuple0 } = _elm_lang$core$Native_Utils
 
@@ -54,6 +55,20 @@ const _elm_node$core$Native_FileSystem = function () {
     const readFileAsBuffer = filename => readFile(filename, null)
 
 
+    // REMOVE
+
+
+    // remove : String -> Task Decode.Value ()
+    const remove = filename => nativeBinding(callback => {
+        try {
+            rm(filename, error => {
+                if (error) return callback(fail(error))
+                return callback(succeed(Tuple0))
+            })
+        } catch (error) { return callback(fail(error)) }
+    })
+
+
     // WRITE
 
 
@@ -88,6 +103,7 @@ const _elm_node$core$Native_FileSystem = function () {
         { copy
         , readFileAsString
         , readFileAsBuffer
+        , remove
         , writeFileFromString
         , writeFileFromBuffer
         }

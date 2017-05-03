@@ -110,6 +110,11 @@ init =
                             FileSystem.copy False (filename ++ "c") filename
                                 |> Task.map (always (Debug.log "Complete" "copy") >> always ())
                         )
+                    |> Task.andThen
+                        (\_ ->
+                            FileSystem.remove (filename ++ "c")
+                                |> Task.map (always (Debug.log "Complete" "remove") >> always ())
+                        )
                     |> Task.attempt TestComplete
               ]
 
