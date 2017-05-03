@@ -7,24 +7,17 @@ const _elm_node$core$Native_FileSystem = function () {
     const { Tuple0 } = _elm_lang$core$Native_Utils
 
 
-    // INTERNAL
-
-
-    // octalStringToInt : String -> Int
-    const octalStringToInt = string => parseInt(string, 8)
-
-
     // COPY
 
 
-    // copy : String -> String -> Task Decode.Value Decode.Value
-    const copy = F2((to, from) => nativeBinding(callback => {
+    // copy : Bool -> String -> String -> Task Decode.Value Decode.Value
+    const copy = F3((overwrite, to, from) => nativeBinding(callback => {
         const extractFilename = message => {
             const match = (/(?:File ){0,1}(.*) exists/).exec(message)
             return match ? match[1] : null
         }
         try {
-            cpr(from, to, (error, files) => {
+            cpr(from, to, { overwrite }, (error, files) => {
                 // single file case
                 if (error && !files) {
                     const filename = extractFilename(error.message)
@@ -65,16 +58,15 @@ const _elm_node$core$Native_FileSystem = function () {
 
 
     const writeFile = (filename, mode, encoding, data) => nativeBinding(callback => {
+        const octalStringToInt = string => parseInt(string, 8)
         try {
-            const options =
-                { encoding : encoding
-                , mode : octalStringToInt(mode)
-                }
-            // TODO mkdirp first
-            // then writeFile
             const dirname = path.dirname(filename)
             mkdirp(dirname, error => {
                 if (error) return callback(fail(error))
+                const options =
+                    { encoding : encoding
+                    , mode : octalStringToInt(mode)
+                    }
                 fs.writeFile(filename, data, options, error => {
                     if (error) return callback(fail(error))
                     return callback(succeed(Tuple0))

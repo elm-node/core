@@ -103,11 +103,11 @@ init =
                     |> Task.andThen
                         (\_ ->
                             FileSystem.writeFileFromBuffer filename "666" buffer
-                                |> Task.map (always (Debug.log "Complete" "writeFileFromString") >> always ())
+                                |> Task.map (always (Debug.log "Complete" "writeFileFromBuffer") >> always ())
                         )
                     |> Task.andThen
                         (\_ ->
-                            FileSystem.copy (filename ++ "c") filename
+                            FileSystem.copy False (filename ++ "c") filename
                                 |> Task.map (always (Debug.log "Complete" "copy") >> always ())
                         )
                     |> Task.attempt TestComplete

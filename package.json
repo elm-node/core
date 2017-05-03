@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "eslint": "^3.19.0",
-    "eslint-config-elm": "^1.0.0",
+    "eslint-config-elm": "^2.0.0",
     "npm-run-all": "^4.0.2"
   }
 }

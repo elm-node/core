@@ -32,8 +32,10 @@ in single file mode we have different behavior ...
 Error is just the problem for a single file
 filename is undefined
 
+in cofirm case, error = list of stat errors
+
 -}
-copy : String -> String -> Task Decode.Value Decode.Value
+copy : Bool -> String -> String -> Task Decode.Value Decode.Value
 copy =
     Native.FileSystem.copy
 

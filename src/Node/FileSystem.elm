@@ -32,20 +32,6 @@ defaultEncoding =
     Utf8
 
 
-type alias Mode =
-    String
-
-
-{-| Default mode.
-
-Read and write permissions for user, group, and others.
-
--}
-defaultMode : String
-defaultMode =
-    "666"
-
-
 
 -- COPY
 {-
@@ -61,37 +47,35 @@ defaultMode =
 
 
 {-| -}
-copy : String -> String -> Task Error (Dict String (Result Error ()))
-copy to from =
+copy : Bool -> String -> String -> Task Error (Dict String (Result Error ()))
+copy overwrite to from =
     let
         decode =
             Decode.decodeValue <|
                 Decode.map2
-                    (\errors files -> { errors = errors, files = files })
+                    (\errors files ->
+                        List.foldl
+                            (\filename results ->
+                                let
+                                    error =
+                                        List.find (Error.message >> String.contains filename) errors
+
+                                    result =
+                                        error
+                                            |> Maybe.map Err
+                                            |> Maybe.withDefault (Ok ())
+                                in
+                                    Dict.insert filename result results
+                            )
+                            Dict.empty
+                            files
+                    )
                     (Decode.field "errors" <| Decode.list Error.decoder)
                     (Decode.field "files" <| Decode.list Decode.string)
     in
-        LowLevel.copy to from
+        LowLevel.copy overwrite to from
             |> Task.mapError Error.fromValue
             |> Task.andThen (decode >> Result.unpack (Error "FileSystem" >> Task.fail) Task.succeed)
-            |> Task.map
-                (\{ errors, files } ->
-                    List.foldl
-                        (\filename results ->
-                            let
-                                error =
-                                    List.find (Error.message >> String.contains filename) errors
-
-                                result =
-                                    error
-                                        |> Maybe.map Err
-                                        |> Maybe.withDefault (Ok ())
-                            in
-                                Dict.insert filename result results
-                        )
-                        Dict.empty
-                        files
-                )
 
 
 
@@ -114,6 +98,20 @@ readFileAsString filename encoding =
 
 
 -- WRITE
+
+
+type alias Mode =
+    String
+
+
+{-| Default mode.
+
+Read and write permissions for user, group, and others.
+
+-}
+defaultMode : String
+defaultMode =
+    "666"
 
 
 {-| Write a file.
