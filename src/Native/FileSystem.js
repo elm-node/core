@@ -1,6 +1,8 @@
 const _elm_node$core$Native_FileSystem = function () {
     const cpr = require( "cpr" )
     const fs = require( "fs" )
+    const mkdirp = require("mkdirp")
+    const path = require("path")
     const { nativeBinding, succeed, fail } = _elm_lang$core$Native_Scheduler
     const { Tuple0 } = _elm_lang$core$Native_Utils
 
@@ -32,7 +34,7 @@ const _elm_node$core$Native_FileSystem = function () {
                 // multiple file case
                 if (error && files) return callback(succeed({ errors : error.list, files }))
                 // copying a single file with no errors returns files and error undefined ...
-                return callback(succeed({ errors : [], files : files || [] }))
+                return callback(succeed({ errors : [], files : files || [ to ] }))
             })
         } catch (error) { callback(fail(error)) }
     }))
@@ -68,9 +70,15 @@ const _elm_node$core$Native_FileSystem = function () {
                 { encoding : encoding
                 , mode : octalStringToInt(mode)
                 }
-            fs.writeFile(filename, data, options, error => {
+            // TODO mkdirp first
+            // then writeFile
+            const dirname = path.dirname(filename)
+            mkdirp(dirname, error => {
                 if (error) return callback(fail(error))
-                return callback(succeed(Tuple0))
+                fs.writeFile(filename, data, options, error => {
+                    if (error) return callback(fail(error))
+                    return callback(succeed(Tuple0))
+                })
             })
         } catch (error) { return callback(fail(error)) }
     })

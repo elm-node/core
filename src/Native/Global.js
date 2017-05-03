@@ -4,7 +4,7 @@ const _elm_node$core$Native_Global = function () {
 
 
     // parseInt
-    const parseInt = F2((string, radix) => {
+    const parseInt = F2((radix, string) => {
         try {
             const value = global.parseInt(string, radix)
             return Ok(value)

@@ -33,7 +33,7 @@ init =
                                 message =
                                     Debug.log "Testing" "parseInt"
                             in
-                                parseInt string 16
+                                parseInt 16 string
                                     |> Result.andThen
                                         (\value ->
                                             if value == 1077121085 then

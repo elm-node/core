@@ -14,7 +14,7 @@ import Node.Error as Error exposing (Error)
 
 
 {-| -}
-parseInt : String -> Int -> Result Error Int
-parseInt string radix =
-    LowLevel.parseInt string radix
+parseInt : Int -> String -> Result Error Int
+parseInt radix string =
+    LowLevel.parseInt radix string
         |> Result.mapError Error.fromValue
