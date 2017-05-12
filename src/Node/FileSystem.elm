@@ -36,7 +36,6 @@ defaultEncoding =
 
 -- COPY
 {-
-
    if no error -> Task.succeed <| Dict String (Result Error ())
    if error.list -> Task.succeed <| Dict String (Result Error ())
    if no error list -> Task.fail Error

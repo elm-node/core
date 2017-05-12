@@ -23,9 +23,9 @@ import Result.Extra as Result
 type Error
     = Error String String
     | SystemError
+        Code
         { message : String
         , stack : String
-        , code : Code
         , syscall : String
         , path : Maybe String
         , address : Maybe String
@@ -40,7 +40,7 @@ message error =
         Error message _ ->
             message
 
-        SystemError { message } ->
+        SystemError _ { message } ->
             message
 
 
@@ -54,10 +54,9 @@ decoder =
                     Just code ->
                         Decode.map7
                             (\message stack code syscall path address port_ ->
-                                SystemError
+                                SystemError code
                                     { message = message
                                     , stack = stack
-                                    , code = code
                                     , syscall = syscall
                                     , path = path
                                     , address = address
