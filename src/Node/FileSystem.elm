@@ -1,27 +1,29 @@
 module Node.FileSystem
     exposing
         ( copy
+        , defaultEncoding
+        , defaultMode
         , readFile
         , readFileAsString
         , remove
         , writeFile
-        , writeFileFromString
         , writeFileFromBuffer
+        , writeFileFromString
         )
 
 {-| FileSystem
 
-@docs copy , readFile , readFileAsString , remove , writeFile , writeFileFromString , writeFileFromBuffer
+@docs copy , defaultEncoding , defaultMode , readFile , readFileAsString , remove , writeFile , writeFileFromString , writeFileFromBuffer
 
 -}
 
-import Node.Buffer exposing (Buffer)
-import Node.Error as Error exposing (Error(..))
-import Node.Encoding as Encoding exposing (Encoding(..))
-import Node.FileSystem.LowLevel as LowLevel
 import Dict exposing (Dict)
 import Json.Decode as Decode
 import List.Extra as List
+import Node.Buffer exposing (Buffer)
+import Node.Encoding as Encoding exposing (Encoding(..))
+import Node.Error as Error exposing (Error(..))
+import Node.FileSystem.LowLevel as LowLevel
 import Result.Extra as Result
 import Task exposing (Task)
 
@@ -65,7 +67,7 @@ copy overwrite to from =
                                             |> Maybe.map Err
                                             |> Maybe.withDefault (Ok ())
                                 in
-                                    Dict.insert filename result results
+                                Dict.insert filename result results
                             )
                             Dict.empty
                             files
@@ -73,9 +75,9 @@ copy overwrite to from =
                     (Decode.field "errors" <| Decode.list Error.decoder)
                     (Decode.field "files" <| Decode.list Decode.string)
     in
-        LowLevel.copy overwrite to from
-            |> Task.mapError Error.fromValue
-            |> Task.andThen (decode >> Result.unpack (Error "FileSystem" >> Task.fail) Task.succeed)
+    LowLevel.copy overwrite to from
+        |> Task.mapError Error.fromValue
+        |> Task.andThen (decode >> Result.unpack (Error "FileSystem" >> Task.fail) Task.succeed)
 
 
 
