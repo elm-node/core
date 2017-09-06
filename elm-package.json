@@ -1,29 +1,29 @@
 {
-  "version": "2.1.0",
-  "summary": "",
-  "repository": "https://github.com/elm-node/core.git",
-  "license": "Unlicense",
-  "source-directories": [
-    "src",
-    "test/Buffer",
-    "test/Crypto",
-    "test/FileSystem",
-    "test/Global"
-  ],
-  "exposed-modules": [
-    "Node.Buffer",
-    "Node.Crypto",
-    "Node.Encoding",
-    "Node.Error",
-    "Node.FileSystem",
-    "Node.Global"
-  ],
-  "native-modules": true,
-  "dependencies": {
-    "elm-lang/core": "5.1.1 <= v < 6.0.0",
-    "elm-community/json-extra": "2.1.0 <= v < 3.0.0",
-    "elm-community/list-extra": "6.0.0 <= v < 7.0.0",
-    "elm-community/result-extra": "2.2.0 <= v < 3.0.0"
-  },
-  "elm-version": "0.18.0 <= v < 0.19.0"
+    "version": "2.1.1",
+    "summary": "",
+    "repository": "https://github.com/elm-node/core.git",
+    "license": "Unlicense",
+    "source-directories": [
+        "src",
+        "test/Buffer",
+        "test/Crypto",
+        "test/FileSystem",
+        "test/Global"
+    ],
+    "exposed-modules": [
+        "Node.Buffer",
+        "Node.Crypto",
+        "Node.Encoding",
+        "Node.Error",
+        "Node.FileSystem",
+        "Node.Global"
+    ],
+    "native-modules": true,
+    "dependencies": {
+        "elm-community/json-extra": "2.1.0 <= v < 3.0.0",
+        "elm-community/list-extra": "6.0.0 <= v < 7.0.0",
+        "elm-community/result-extra": "2.2.0 <= v < 3.0.0",
+        "elm-lang/core": "5.1.1 <= v < 6.0.0"
+    },
+    "elm-version": "0.18.0 <= v < 0.19.0"
 }
