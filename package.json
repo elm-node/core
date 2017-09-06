@@ -3,8 +3,6 @@
   "version": "2.1.0",
   "description": "Native bindings to Node.js's core libraries.",
   "scripts": {
-    "postinstall": "elm-npm-postinstall",
-    "preuninstall": "elm-npm-preuninstall",
     "test": "npm-run-all test:*",
     "test:Buffer": "elm-make test/Buffer/Main.elm --output test/Buffer/main.js && node test/Buffer/index.js",
     "test:Crypto": "elm-make test/Crypto/Main.elm --output test/Crypto/main.js && node test/Crypto/index.js",
@@ -15,7 +13,6 @@
   "author": "Alexandre Gigliotti <alex@panosoft.com>",
   "license": "Unlicense",
   "dependencies": {
-    "@elm-node/npm-scripts": "^1.0.0",
     "cpr": "^2.0.2",
     "mkdirp": "^0.5.1",
     "rimraf": "^2.6.1"
