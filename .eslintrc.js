@@ -1,3 +1,6 @@
 module.exports = {
-    "extends": "elm"
+    "extends": "elm",
+	rules: {
+		"no-shadow": "off"
+	}
 };
