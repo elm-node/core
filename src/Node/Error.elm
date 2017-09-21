@@ -82,7 +82,7 @@ decoder =
 fromValue : Decode.Value -> Error
 fromValue value =
     Decode.decodeValue decoder value
-        |> Result.extract (\error -> Error "Decoding Error value failed." error)
+        |> Result.extract (\error -> Error ("Decoding Error: " ++ error ++ " value failed: " ++ toString value) error)
 
 
 {-| -}
@@ -113,7 +113,7 @@ type Code
     | DestinationAddressRequired --EDESTADDRREQ
     | ArgumentOutOfDomain --EDOM
     | DiskQuotaExceeded --EDQUOT
-    | FileExists -- EEEXIST
+    | FileExists -- EEXIST
     | BadAddress --EFAULT
     | FileTooLarge --EFBIG
     | HostDown --EHOSTDOWN
@@ -233,7 +233,7 @@ codeMap =
     , ( DestinationAddressRequired, [ "EDESTADDRREQ" ] )
     , ( ArgumentOutOfDomain, [ "EDOM" ] )
     , ( DiskQuotaExceeded, [ "EDQUOT" ] )
-    , ( FileExists, [ " EEEXIST" ] )
+    , ( FileExists, [ "EEXIST" ] )
     , ( BadAddress, [ "EFAULT" ] )
     , ( FileTooLarge, [ "EFBIG" ] )
     , ( HostDown, [ "EHOSTDOWN" ] )
