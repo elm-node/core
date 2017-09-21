@@ -9,11 +9,16 @@ module Node.FileSystem
         , writeFile
         , writeFileFromBuffer
         , writeFileFromString
+        , exists
+        , mkdirp
+        , rename
+        , isSymlink
+        , makeSymlink
         )
 
 {-| FileSystem
 
-@docs copy , defaultEncoding , defaultMode , readFile , readFileAsString , remove , writeFile , writeFileFromString , writeFileFromBuffer
+@docs copy , defaultEncoding , defaultMode , readFile , readFileAsString , remove , writeFile , writeFileFromString , writeFileFromBuffer, exists, mkdirp, rename, isSymlink, makeSymlink
 
 -}
 
@@ -26,6 +31,7 @@ import Node.Error as Error exposing (Error(..))
 import Node.FileSystem.LowLevel as LowLevel
 import Result.Extra as Result
 import Task exposing (Task)
+import Utils.Func exposing (..)
 
 
 {-| Default encoding.
@@ -67,7 +73,7 @@ copy overwrite to from =
                                             |> Maybe.map Err
                                             |> Maybe.withDefault (Ok ())
                                 in
-                                Dict.insert filename result results
+                                    Dict.insert filename result results
                             )
                             Dict.empty
                             files
@@ -75,9 +81,9 @@ copy overwrite to from =
                     (Decode.field "errors" <| Decode.list Error.decoder)
                     (Decode.field "files" <| Decode.list Decode.string)
     in
-    LowLevel.copy overwrite to from
-        |> Task.mapError Error.fromValue
-        |> Task.andThen (decode >> Result.unpack (Error "FileSystem" >> Task.fail) Task.succeed)
+        LowLevel.copy overwrite to from
+            |> Task.mapError Error.fromValue
+            |> Task.andThen (decode >> Result.unpack (Error "FileSystem" >> Task.fail) Task.succeed)
 
 
 
@@ -147,3 +153,43 @@ writeFileFromBuffer : String -> Mode -> Buffer -> Task Error ()
 writeFileFromBuffer filename mode data =
     LowLevel.writeFileFromBuffer filename mode data
         |> Task.mapError Error.fromValue
+
+
+{-| check file's existence
+-}
+exists : String -> Task Error Bool
+exists =
+    Native.FileSystem.exists
+        |> compose (Task.mapError Error.fromValue)
+
+
+{-| make directory creating parent directories that don't exist
+-}
+mkdirp : String -> Task Error ()
+mkdirp =
+    Native.FileSystem.mkdirp
+        |> compose (Task.mapError Error.fromValue)
+
+
+{-| rename file
+-}
+rename : String -> String -> Task Error ()
+rename =
+    Native.FileSystem.rename
+        |> compose2 (Task.mapError Error.fromValue)
+
+
+{-| check to see if file is symlink
+-}
+isSymlink : String -> Task Error Bool
+isSymlink =
+    Native.FileSystem.isSymlink
+        |> compose (Task.mapError Error.fromValue)
+
+
+{-| make a symbolic link
+-}
+makeSymlink : String -> String -> String -> Task Error ()
+makeSymlink =
+    Native.FileSystem.makeSymlink
+        |> compose3 (Task.mapError Error.fromValue)

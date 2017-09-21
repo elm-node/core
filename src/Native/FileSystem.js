@@ -1,4 +1,4 @@
-const _elm_node$core$Native_FileSystem = function () {
+const _elm_node$core$Native_FileSystem = (_ => {
     const cpr = require( "cpr" )
     const fs = require( "fs" )
     const mkdirp = require("mkdirp")
@@ -98,6 +98,40 @@ const _elm_node$core$Native_FileSystem = function () {
     // writeFileFromBuffer : String -> String -> Buffer -> Task Decode.Value ()
     const writeFileFromBuffer = F3((filename, mode, buffer) => writeFile(filename, mode, null, buffer))
 
+    const exists = path => nativeBinding(callback => {
+        try {
+            fs.access(path, fs.constants.F_OK, err => callback(err ? succeed(false) : succeed(true)))
+        }
+        catch (error) {callback(fail(error))}
+    })
+
+    const mkdirp_ = path => nativeBinding(callback => {
+        try {
+            mkdirp(path, err => callback(err ? fail(err) : succeed()))
+        }
+        catch (error) {callback(fail(error))}
+    })
+
+    const rename = (oldPath, newPath) => nativeBinding(callback => {
+        try {
+            fs.rename(oldPath, newPath, err => callback(err ? fail(err) : succeed()))
+        }
+        catch (error) {callback(fail(error))}
+    })
+
+    const isSymlink = path => nativeBinding(callback => {
+        try {
+            fs.lstat(path, (err, stats) => callback(err ? fail(err) : succeed(stats.isSymbolicLink())))
+        }
+        catch (error) {callback(fail(error))}
+    })
+
+    const makeSymlink = (target, path, type) => nativeBinding(callback => {
+        try {
+            fs.symlink(target, path, type, err => callback(err ? fail(err) : succeed()))
+        }
+        catch (error) {callback(fail(error))}
+    })
 
     const exports =
         { copy
@@ -106,6 +140,11 @@ const _elm_node$core$Native_FileSystem = function () {
         , remove
         , writeFileFromString
         , writeFileFromBuffer
+        , exists
+        , mkdirp : mkdirp_
+        , rename : F2(rename)
+		, isSymlink
+		, makeSymlink : F3(makeSymlink)
         }
     return exports
-}()
+})()
