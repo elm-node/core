@@ -17,9 +17,7 @@ module Node.FileSystem
         )
 
 {-| FileSystem
-
 @docs copy , defaultEncoding , defaultMode , readFile , readFileAsString , remove , writeFile , writeFileFromString , writeFileFromBuffer, exists, mkdirp, rename, isSymlink, makeSymlink
-
 -}
 
 import Dict exposing (Dict)
@@ -31,7 +29,6 @@ import Node.Error as Error exposing (Error(..))
 import Node.FileSystem.LowLevel as LowLevel
 import Result.Extra as Result
 import Task exposing (Task)
-import Utils.Func exposing (..)
 
 
 {-| Default encoding.
@@ -158,38 +155,38 @@ writeFileFromBuffer filename mode data =
 {-| check file's existence
 -}
 exists : String -> Task Error Bool
-exists =
-    Native.FileSystem.exists
-        |> compose (Task.mapError Error.fromValue)
+exists path =
+    LowLevel.exists path
+        |> Task.mapError Error.fromValue
 
 
 {-| make directory creating parent directories that don't exist
 -}
 mkdirp : String -> Task Error ()
-mkdirp =
-    Native.FileSystem.mkdirp
-        |> compose (Task.mapError Error.fromValue)
+mkdirp path =
+    LowLevel.mkdirp path
+        |> Task.mapError Error.fromValue
 
 
 {-| rename file
 -}
 rename : String -> String -> Task Error ()
-rename =
-    Native.FileSystem.rename
-        |> compose2 (Task.mapError Error.fromValue)
+rename oldPath newPath =
+    LowLevel.rename oldPath newPath
+        |> Task.mapError Error.fromValue
 
 
 {-| check to see if file is symlink
 -}
 isSymlink : String -> Task Error Bool
-isSymlink =
-    Native.FileSystem.isSymlink
-        |> compose (Task.mapError Error.fromValue)
+isSymlink path =
+    LowLevel.isSymlink path
+        |> Task.mapError Error.fromValue
 
 
 {-| make a symbolic link
 -}
 makeSymlink : String -> String -> String -> Task Error ()
-makeSymlink =
-    Native.FileSystem.makeSymlink
-        |> compose3 (Task.mapError Error.fromValue)
+makeSymlink target path type_ =
+    LowLevel.makeSymlink target path type_
+        |> Task.mapError Error.fromValue

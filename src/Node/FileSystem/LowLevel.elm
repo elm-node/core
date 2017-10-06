@@ -6,6 +6,11 @@ module Node.FileSystem.LowLevel
         , remove
         , writeFileFromString
         , writeFileFromBuffer
+        , exists
+        , mkdirp
+        , rename
+        , isSymlink
+        , makeSymlink
         )
 
 import Node.Buffer exposing (Buffer)
@@ -64,3 +69,28 @@ writeFileFromString =
 writeFileFromBuffer : String -> String -> Buffer -> Task Decode.Value ()
 writeFileFromBuffer =
     Native.FileSystem.writeFileFromBuffer
+
+
+exists : String -> Task Decode.Value Bool
+exists =
+    Native.FileSystem.exists
+
+
+mkdirp : String -> Task Decode.Value ()
+mkdirp =
+    Native.FileSystem.mkdirp
+
+
+rename : String -> String -> Task Decode.Value ()
+rename =
+    Native.FileSystem.rename
+
+
+isSymlink : String -> Task Decode.Value Bool
+isSymlink =
+    Native.FileSystem.isSymlink
+
+
+makeSymlink : String -> String -> String -> Task Decode.Value ()
+makeSymlink =
+    Native.FileSystem.makeSymlink
