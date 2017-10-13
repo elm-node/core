@@ -13,7 +13,8 @@ module Node.Encoding
 import String
 
 
-{-| -}
+{-| Encoding union type.
+-}
 type Encoding
     = Ascii
     | Utf8
@@ -23,7 +24,8 @@ type Encoding
     | Hex
 
 
-{-| -}
+{-| Convert encoding to string.
+-}
 toString : Encoding -> String
 toString =
     Basics.toString >> String.toLower

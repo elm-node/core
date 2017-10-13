@@ -16,11 +16,7 @@ import Node.Encoding as Encoding exposing (Encoding)
 import Node.Error as Error exposing (Error)
 
 
-{-| Buffer
-
-buffer is an instance of Uint8Array
-buffers are not copied automatically, they create a view above the root buffer
-
+{-| Buffer type.
 -}
 type alias Buffer =
     LowLevel.Buffer

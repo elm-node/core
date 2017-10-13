@@ -30,7 +30,7 @@ const _elm_node$core$Native_FileSystem = (_ => {
                 // copying a single file with no errors returns files and error undefined ...
                 return callback(succeed({ errors : [], files : files || [ to ] }))
             })
-        } catch (error) { callback(fail(error)) }
+        } catch (error) { return callback(fail(error)) }
     }))
 
 
@@ -43,7 +43,7 @@ const _elm_node$core$Native_FileSystem = (_ => {
                 if (error) return callback(fail(error))
                 return callback(succeed(data))
             })
-        } catch (error) { callback(fail(error)) }
+        } catch (error) { return callback(fail(error)) }
     })
 
 
@@ -98,53 +98,53 @@ const _elm_node$core$Native_FileSystem = (_ => {
     // writeFileFromBuffer : String -> String -> Buffer -> Task Decode.Value ()
     const writeFileFromBuffer = F3((filename, mode, buffer) => writeFile(filename, mode, null, buffer))
 
-    const exists = path => nativeBinding(callback => {
+    const exists = filename => nativeBinding(callback => {
         try {
-            fs.access(path, fs.constants.F_OK, err => callback(err ? succeed(false) : succeed(true)))
+            fs.access(filename, fs.constants.F_OK, err => callback(err ? succeed(false) : succeed(true)))
         }
-        catch (error) {callback(fail(error))}
+        catch (error) { return callback(fail(error)) }
     })
 
-    const mkdirp_ = path => nativeBinding(callback => {
+    const mkdirp_ = filename => nativeBinding(callback => {
         try {
-            mkdirp(path, err => callback(err ? fail(err) : succeed()))
+            mkdirp(filename, err => callback(err ? fail(err) : succeed()))
         }
-        catch (error) {callback(fail(error))}
+        catch (error) { return callback(fail(error)) }
     })
 
-    const rename = (oldPath, newPath) => nativeBinding(callback => {
+    const rename = F2((from, to) => nativeBinding(callback => {
         try {
-            fs.rename(oldPath, newPath, err => callback(err ? fail(err) : succeed()))
+            fs.rename(from, to, err => callback(err ? fail(err) : succeed()))
         }
-        catch (error) {callback(fail(error))}
+        catch (error) { return callback(fail(error)) }
+    }))
+
+    const isSymlink = filename => nativeBinding(callback => {
+        try {
+            fs.lstat(filename, (err, stats) => callback(err ? fail(err) : succeed(stats.isSymbolicLink())))
+        }
+        catch (error) { return callback(fail(error)) }
     })
 
-    const isSymlink = path => nativeBinding(callback => {
+    const makeSymlink = F3((target, filename, type) => nativeBinding(callback => {
         try {
-            fs.lstat(path, (err, stats) => callback(err ? fail(err) : succeed(stats.isSymbolicLink())))
+            fs.symlink(target, filename, type, err => callback(err ? fail(err) : succeed()))
         }
-        catch (error) {callback(fail(error))}
-    })
-
-    const makeSymlink = (target, path, type) => nativeBinding(callback => {
-        try {
-            fs.symlink(target, path, type, err => callback(err ? fail(err) : succeed()))
-        }
-        catch (error) {callback(fail(error))}
-    })
+        catch (error) { return callback(fail(error)) }
+    }))
 
     const exports =
         { copy
+        , exists
+        , isSymlink
+        , makeSymlink : makeSymlink
+        , mkdirp : mkdirp_
         , readFileAsString
         , readFileAsBuffer
         , remove
+        , rename : rename
         , writeFileFromString
         , writeFileFromBuffer
-        , exists
-        , mkdirp : mkdirp_
-        , rename : F2(rename)
-		, isSymlink
-		, makeSymlink : F3(makeSymlink)
         }
     return exports
 })()

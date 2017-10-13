@@ -19,7 +19,8 @@ import List.Extra as List
 import Result.Extra as Result
 
 
-{-| -}
+{-| Error union type.
+-}
 type Error
     = Error String String
     | SystemError
@@ -33,7 +34,8 @@ type Error
         }
 
 
-{-| -}
+{-| Extract the message from an Error.
+-}
 message : Error -> String
 message error =
     case error of
@@ -44,7 +46,8 @@ message error =
             message
 
 
-{-| -}
+{-| Error decoder.
+-}
 decoder : Decode.Decoder Error
 decoder =
     Decode.maybe (Decode.field "code" Decode.string)
@@ -78,14 +81,16 @@ decoder =
             )
 
 
-{-| -}
+{-| Decode an Error from a Value.
+-}
 fromValue : Decode.Value -> Error
 fromValue value =
     Decode.decodeValue decoder value
         |> Result.extract (\error -> Error ("Decoding Error: " ++ error ++ " value failed: " ++ toString value) error)
 
 
-{-| -}
+{-| Error code union type.
+-}
 type Code
     = ArgumentListTooLong --E2BIG
     | PermissionDenied --EACCES

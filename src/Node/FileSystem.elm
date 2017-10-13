@@ -17,7 +17,9 @@ module Node.FileSystem
         )
 
 {-| FileSystem
-@docs copy , defaultEncoding , defaultMode , readFile , readFileAsString , remove , writeFile , writeFileFromString , writeFileFromBuffer, exists, mkdirp, rename, isSymlink, makeSymlink
+
+@docs copy , defaultEncoding , defaultMode , exists , mkdirp , readFile , readFileAsString , remove , rename , writeFile , writeFileFromString , writeFileFromBuffer , isSymlink , makeSymlink
+
 -}
 
 import Dict exposing (Dict)
@@ -40,18 +42,10 @@ defaultEncoding =
 
 
 -- COPY
-{-
-   if no error -> Task.succeed <| Dict String (Result Error ())
-   if error.list -> Task.succeed <| Dict String (Result Error ())
-   if no error list -> Task.fail Error
 
-   decode error
-   decode object, files array, error array
-   intersect files array and error array to create Dict of results
+
+{-| Copy a file or directory recursively.
 -}
-
-
-{-| -}
 copy : Bool -> String -> String -> Task Error (Dict String (Result Error ()))
 copy overwrite to from =
     let
@@ -87,14 +81,16 @@ copy overwrite to from =
 -- READ
 
 
-{-| -}
+{-| Read a file as a Buffer.
+-}
 readFile : String -> Task Error Buffer
 readFile filename =
     LowLevel.readFileAsBuffer filename
         |> Task.mapError Error.fromValue
 
 
-{-| -}
+{-| Read a file as a string.
+-}
 readFileAsString : String -> Encoding -> Task Error String
 readFileAsString filename encoding =
     LowLevel.readFileAsString filename (Encoding.toString encoding)
@@ -105,7 +101,8 @@ readFileAsString filename encoding =
 -- REMOVE
 
 
-{-| -}
+{-| Remove a file or directory recursively.
+-}
 remove : String -> Task Error ()
 remove filename =
     LowLevel.remove filename
@@ -121,16 +118,16 @@ type alias Mode =
 
 
 {-| Default mode.
-
-Read and write permissions for user, group, and others.
-
 -}
 defaultMode : String
 defaultMode =
     "666"
 
 
-{-| Write a file.
+{-| Write a file from a Buffer with the default file mode.
+
+Non-existent directories in the filename path will be created.
+
 -}
 writeFile : String -> Buffer -> Task Error ()
 writeFile filename data =
@@ -138,55 +135,68 @@ writeFile filename data =
         |> Task.mapError Error.fromValue
 
 
-{-| -}
+{-| Write a file from a String.
+
+Non-existent directories in the filename path will be created.
+
+-}
 writeFileFromString : String -> Mode -> Encoding -> String -> Task Error ()
 writeFileFromString filename mode encoding data =
     LowLevel.writeFileFromString filename mode (Encoding.toString encoding) data
         |> Task.mapError Error.fromValue
 
 
-{-| -}
+{-| Write a file from a Buffer.
+
+Non-existent directories in the filename path will be created.
+
+-}
 writeFileFromBuffer : String -> Mode -> Buffer -> Task Error ()
 writeFileFromBuffer filename mode data =
     LowLevel.writeFileFromBuffer filename mode data
         |> Task.mapError Error.fromValue
 
 
-{-| check file's existence
+{-| Check whether a file exists.
 -}
 exists : String -> Task Error Bool
-exists path =
-    LowLevel.exists path
+exists filename =
+    LowLevel.exists filename
         |> Task.mapError Error.fromValue
 
 
-{-| make directory creating parent directories that don't exist
+{-| Make a directory.
+
+Non-existent directories in the path will be created.
+
 -}
 mkdirp : String -> Task Error ()
-mkdirp path =
-    LowLevel.mkdirp path
+mkdirp filename =
+    LowLevel.mkdirp filename
         |> Task.mapError Error.fromValue
 
 
-{-| rename file
+{-| Rename a file.
 -}
 rename : String -> String -> Task Error ()
-rename oldPath newPath =
-    LowLevel.rename oldPath newPath
+rename from to =
+    LowLevel.rename from to
         |> Task.mapError Error.fromValue
 
 
-{-| check to see if file is symlink
+{-| Check whether a file is a symbolic link.
 -}
 isSymlink : String -> Task Error Bool
-isSymlink path =
-    LowLevel.isSymlink path
+isSymlink filename =
+    LowLevel.isSymlink filename
         |> Task.mapError Error.fromValue
 
 
-{-| make a symbolic link
+{-| Make a symbolic link.
 -}
 makeSymlink : String -> String -> String -> Task Error ()
-makeSymlink target path type_ =
-    LowLevel.makeSymlink target path type_
+makeSymlink target filename type_ =
+    --TODO rename to symlink
+    --TODO remove type support
+    LowLevel.makeSymlink target filename type_
         |> Task.mapError Error.fromValue

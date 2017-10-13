@@ -6,7 +6,7 @@ module Node.Crypto
         , randomBytes
         )
 
-{-| Native bindings for node's Crypto module.
+{-| Native bindings for Node's Crypto module.
 
 @docs Cipher , decrypt , encrypt , randomBytes
 
@@ -195,7 +195,8 @@ cipherToString cipher =
         |> Maybe.withDefault (Err <| Error "Crypto" "Cipher could not be found.")
 
 
-{-| -}
+{-| Encrypt a Buffer.
+-}
 encrypt : Cipher -> String -> Buffer -> Result Error Buffer
 encrypt cipher password buffer =
     cipherToString cipher
@@ -206,7 +207,8 @@ encrypt cipher password buffer =
             )
 
 
-{-| -}
+{-| Decrypt a Buffer.
+-}
 decrypt : Cipher -> String -> Buffer -> Result Error Buffer
 decrypt cipher password buffer =
     cipherToString cipher
@@ -217,7 +219,8 @@ decrypt cipher password buffer =
             )
 
 
-{-| -}
+{-| Generate cryptographically strong pseudo-random data.
+-}
 randomBytes : Int -> Task Error Buffer
 randomBytes size =
     LowLevel.randomBytes size
