@@ -9,7 +9,7 @@
 grove install elm-node/core
 ```
 
-_Note: [Grove](https://github.com/panosoft/elm-grove), an advanced package manager for Elm, can be found [here](https://github.com/panosoft/elm-grove)._
+_Note: [Grove](https://github.com/panosoft/elm-grove) is an advanced package manager for Elm and can be found [here](https://github.com/panosoft/elm-grove)._
 
 
 ## Documentation
