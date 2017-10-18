@@ -5,7 +5,7 @@
 
 ## Install
 
-```
+```sh
 grove install elm-node/core
 ```
 
