@@ -14,4 +14,4 @@ _Note: [Grove](https://github.com/panosoft/elm-grove) is an advanced package man
 
 ## Documentation
 
-Can be found in the [./docs](./tree/master/docs) directory.
+Can be found in the [./docs](./docs) directory.
