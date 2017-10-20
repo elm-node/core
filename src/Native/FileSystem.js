@@ -8,9 +8,6 @@ const _elm_node$core$Native_FileSystem = (_ => {
     const { Tuple0 } = _elm_lang$core$Native_Utils
 
 
-    // COPY
-
-
     // copy : Bool -> String -> String -> Task Decode.Value Decode.Value
     const copy = F3((overwrite, to, from) => nativeBinding(callback => {
         const extractFilename = message => {
@@ -34,28 +31,15 @@ const _elm_node$core$Native_FileSystem = (_ => {
     }))
 
 
-    // READ
-
-
-    const readFile = (filename, encoding) => nativeBinding(callback => {
+    // readFile : String -> Task Decode.Value Buffer
+    const readFile = filename => nativeBinding(callback => {
         try {
-            fs.readFile(filename, encoding, (error, data) => {
+            fs.readFile(filename, (error, buffer) => {
                 if (error) return callback(fail(error))
-                return callback(succeed(data))
+                return callback(succeed(buffer))
             })
         } catch (error) { return callback(fail(error)) }
     })
-
-
-    // readFileAsString : String -> String -> Task Decode.Value String
-    const readFileAsString = F2(readFile)
-
-
-    // readFileAsBuffer : String -> Task Decode.Value Buffer
-    const readFileAsBuffer = filename => readFile(filename, null)
-
-
-    // REMOVE
 
 
     // remove : String -> Task Decode.Value ()
@@ -69,34 +53,21 @@ const _elm_node$core$Native_FileSystem = (_ => {
     })
 
 
-    // WRITE
-
-
-    const writeFile = (filename, mode, encoding, data) => nativeBinding(callback => {
-        const octalStringToInt = string => parseInt(string, 8)
+    // writeFile : String -> Int -> Buffer -> Task Decode.Value ()
+    const writeFile = F3((filename, mode, buffer) => nativeBinding(callback => {
         try {
             const dirname = path.dirname(filename)
             mkdirp(dirname, error => {
                 if (error) return callback(fail(error))
-                const options =
-                    { encoding : encoding
-                    , mode : octalStringToInt(mode)
-                    }
-                fs.writeFile(filename, data, options, error => {
+                const options = { mode }
+                fs.writeFile(filename, buffer, options, error => {
                     if (error) return callback(fail(error))
                     return callback(succeed(Tuple0))
                 })
             })
         } catch (error) { return callback(fail(error)) }
-    })
+    }))
 
-
-    // writeFileFromString : String -> String -> String -> String -> Task Decode.Value ()
-    const writeFileFromString = F4(writeFile)
-
-
-    // writeFileFromBuffer : String -> String -> Buffer -> Task Decode.Value ()
-    const writeFileFromBuffer = F3((filename, mode, buffer) => writeFile(filename, mode, null, buffer))
 
     const exists = filename => nativeBinding(callback => {
         try {
@@ -107,28 +78,28 @@ const _elm_node$core$Native_FileSystem = (_ => {
 
     const mkdirp_ = filename => nativeBinding(callback => {
         try {
-            mkdirp(filename, err => callback(err ? fail(err) : succeed()))
+            mkdirp(filename, error => callback(error ? fail(error) : succeed(Tuple0)))
         }
         catch (error) { return callback(fail(error)) }
     })
 
     const rename = F2((from, to) => nativeBinding(callback => {
         try {
-            fs.rename(from, to, err => callback(err ? fail(err) : succeed()))
+            fs.rename(from, to, error => callback(error ? fail(error) : succeed(Tuple0)))
         }
         catch (error) { return callback(fail(error)) }
     }))
 
     const isSymlink = filename => nativeBinding(callback => {
         try {
-            fs.lstat(filename, (err, stats) => callback(err ? fail(err) : succeed(stats.isSymbolicLink())))
+            fs.lstat(filename, (error, stats) => callback(error ? fail(error) : succeed(stats.isSymbolicLink())))
         }
         catch (error) { return callback(fail(error)) }
     })
 
     const makeSymlink = F3((target, filename, type) => nativeBinding(callback => {
         try {
-            fs.symlink(target, filename, type, err => callback(err ? fail(err) : succeed()))
+            fs.symlink(target, filename, type, error => callback(error ? fail(error) : succeed(Tuple0)))
         }
         catch (error) { return callback(fail(error)) }
     }))
@@ -137,14 +108,12 @@ const _elm_node$core$Native_FileSystem = (_ => {
         { copy
         , exists
         , isSymlink
-        , makeSymlink : makeSymlink
+        , makeSymlink
         , mkdirp : mkdirp_
-        , readFileAsString
-        , readFileAsBuffer
+        , readFile
         , remove
-        , rename : rename
-        , writeFileFromString
-        , writeFileFromBuffer
+        , rename
+        , writeFile
         }
     return exports
 })()

@@ -1,11 +1,9 @@
 module Node.FileSystem.LowLevel
     exposing
         ( copy
-        , readFileAsString
-        , readFileAsBuffer
+        , readFile
         , remove
-        , writeFileFromString
-        , writeFileFromBuffer
+        , writeFile
         , exists
         , mkdirp
         , rename
@@ -46,14 +44,9 @@ copy =
     Native.FileSystem.copy
 
 
-readFileAsString : String -> String -> Task Decode.Value String
-readFileAsString =
-    Native.FileSystem.readFileAsString
-
-
-readFileAsBuffer : String -> Task Decode.Value Buffer
-readFileAsBuffer =
-    Native.FileSystem.readFileAsBuffer
+readFile : String -> Task Decode.Value Buffer
+readFile =
+    Native.FileSystem.readFile
 
 
 remove : String -> Task Decode.Value ()
@@ -61,14 +54,9 @@ remove =
     Native.FileSystem.remove
 
 
-writeFileFromString : String -> String -> String -> String -> Task Decode.Value ()
-writeFileFromString =
-    Native.FileSystem.writeFileFromString
-
-
-writeFileFromBuffer : String -> String -> Buffer -> Task Decode.Value ()
-writeFileFromBuffer =
-    Native.FileSystem.writeFileFromBuffer
+writeFile : String -> Int -> Buffer -> Task Decode.Value ()
+writeFile =
+    Native.FileSystem.writeFile
 
 
 exists : String -> Task Decode.Value Bool

@@ -25,10 +25,11 @@ module Node.FileSystem
 import Dict exposing (Dict)
 import Json.Decode as Decode
 import List.Extra as List
-import Node.Buffer exposing (Buffer)
+import Node.Buffer as Buffer exposing (Buffer)
 import Node.Encoding as Encoding exposing (Encoding(..))
 import Node.Error as Error exposing (Error(..))
 import Node.FileSystem.LowLevel as LowLevel
+import Node.Global exposing (parseInt)
 import Result.Extra as Result
 import Task exposing (Task)
 
@@ -85,7 +86,7 @@ copy overwrite to from =
 -}
 readFile : String -> Task Error Buffer
 readFile filename =
-    LowLevel.readFileAsBuffer filename
+    LowLevel.readFile filename
         |> Task.mapError Error.fromValue
 
 
@@ -93,8 +94,9 @@ readFile filename =
 -}
 readFileAsString : String -> Encoding -> Task Error String
 readFileAsString filename encoding =
-    LowLevel.readFileAsString filename (Encoding.toString encoding)
+    LowLevel.readFile filename
         |> Task.mapError Error.fromValue
+        |> Task.andThen (Buffer.toString encoding >> Result.unpack Task.fail Task.succeed)
 
 
 
@@ -124,15 +126,28 @@ defaultMode =
     "666"
 
 
+writeFileInternal : String -> Mode -> Buffer -> Task Error ()
+writeFileInternal filename mode buffer =
+    --TODO move mkdirp here instead of native code
+    --(need to alter mkdirp first to take dirname instead of filename)
+    --(also need a path.dirname equivalent in elm)
+    case parseInt 8 mode of
+        Ok mode ->
+            LowLevel.writeFile filename mode buffer
+                |> Task.mapError Error.fromValue
+
+        Err error ->
+            Task.fail error
+
+
 {-| Write a file from a Buffer with the default file mode.
 
 Non-existent directories in the filename path will be created.
 
 -}
 writeFile : String -> Buffer -> Task Error ()
-writeFile filename data =
-    LowLevel.writeFileFromBuffer filename defaultMode data
-        |> Task.mapError Error.fromValue
+writeFile filename buffer =
+    writeFileInternal filename defaultMode buffer
 
 
 {-| Write a file from a String.
@@ -142,8 +157,8 @@ Non-existent directories in the filename path will be created.
 -}
 writeFileFromString : String -> Mode -> Encoding -> String -> Task Error ()
 writeFileFromString filename mode encoding data =
-    LowLevel.writeFileFromString filename mode (Encoding.toString encoding) data
-        |> Task.mapError Error.fromValue
+    (Buffer.fromString encoding data |> Result.unpack Task.fail Task.succeed)
+        |> Task.andThen (writeFileInternal filename mode)
 
 
 {-| Write a file from a Buffer.
@@ -152,15 +167,15 @@ Non-existent directories in the filename path will be created.
 
 -}
 writeFileFromBuffer : String -> Mode -> Buffer -> Task Error ()
-writeFileFromBuffer filename mode data =
-    LowLevel.writeFileFromBuffer filename mode data
-        |> Task.mapError Error.fromValue
+writeFileFromBuffer filename mode buffer =
+    writeFileInternal filename mode buffer
 
 
 {-| Check whether a file exists.
 -}
 exists : String -> Task Error Bool
 exists filename =
+    --TODO consider removing, see how used, introduces race condition if used to check before read/write
     LowLevel.exists filename
         |> Task.mapError Error.fromValue
 
@@ -172,6 +187,7 @@ Non-existent directories in the path will be created.
 -}
 mkdirp : String -> Task Error ()
 mkdirp filename =
+    --TODO check usage, should be dirname instead of filename here.
     LowLevel.mkdirp filename
         |> Task.mapError Error.fromValue
 
@@ -188,6 +204,8 @@ rename from to =
 -}
 isSymlink : String -> Task Error Bool
 isSymlink filename =
+    --TODO replace with `statLink: String -> Task Error Stats` where Stats is a decoded value
+    --TODO add `stat: String -> Task Error Stats`
     LowLevel.isSymlink filename
         |> Task.mapError Error.fromValue
 

@@ -17,5 +17,6 @@ import Node.Error as Error exposing (Error)
 -}
 parseInt : Int -> String -> Result Error Int
 parseInt radix string =
+    -- TODO rename: stringToInt
     LowLevel.parseInt radix string
         |> Result.mapError Error.fromValue
