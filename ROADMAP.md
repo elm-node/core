@@ -12,11 +12,28 @@
 - [x] randomBytes
 
 ## FileSystem
-- [x] write
-- [x] read
+- [x] writeFile
+- [x] readFile
 - [x] copy
 - [x] remove
-- [-] move
+- [x] rename
+- [ ] appendFile
 
 ## Global
 - [x] parseInt
+
+## Path
+- [ ] join
+- [ ] dirname
+- [-] basename
+- [-] extname
+
+## OS
+- [ ] homedir
+- [ ] tmpdir
+
+## Process
+- [ ] env
+
+## Child Process
+- [ ] spawn
