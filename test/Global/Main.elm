@@ -1,6 +1,6 @@
 module Main exposing (main)
 
-import Node.Global exposing (stringToInt)
+import Node.Global as Global
 import Node.Error as Error
 import Result.Extra as Result
 import Task exposing (Task)
@@ -31,15 +31,34 @@ init =
                         (\_ ->
                             let
                                 message =
-                                    Debug.log "Testing" "parseInt"
+                                    Debug.log "Testing" "stringToInt"
                             in
-                                stringToInt 16 string
+                                Global.stringToInt 16 string
                                     |> Result.andThen
                                         (\value ->
                                             if value == 1077121085 then
                                                 let
                                                     message =
-                                                        Debug.log "Complete" "parseInt"
+                                                        Debug.log "Complete" "stringToInt"
+                                                in
+                                                    Ok ()
+                                            else
+                                                Err <| Error.Error "Failed" "Wrong value."
+                                        )
+                        )
+                    |> Result.andThen
+                        (\_ ->
+                            let
+                                message =
+                                    Debug.log "Testing" "intToString"
+                            in
+                                Global.intToString 16 1077121085
+                                    |> Result.andThen
+                                        (\value ->
+                                            if value == "4033903d" then
+                                                let
+                                                    message =
+                                                        Debug.log "Complete" "intToString"
                                                 in
                                                     Ok ()
                                             else

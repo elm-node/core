@@ -1,11 +1,12 @@
 module Node.Global
     exposing
-        ( stringToInt
+        ( intToString
+        , stringToInt
         )
 
 {-| Global functions
 
-@docs stringToInt
+@docs intToString , stringToInt
 
 -}
 
@@ -18,4 +19,12 @@ import Node.Error as Error exposing (Error)
 stringToInt : Int -> String -> Result Error Int
 stringToInt radix string =
     LowLevel.parseInt radix string
+        |> Result.mapError Error.fromValue
+
+
+{-| Convert an integer into a string using the specified radix.
+-}
+intToString : Int -> Int -> Result Error String
+intToString radix integer =
+    LowLevel.toString radix integer
         |> Result.mapError Error.fromValue

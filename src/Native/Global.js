@@ -14,8 +14,18 @@ const _elm_node$core$Native_Global = function () {
     })
 
 
+    // toString : Int -> Int -> Result Decode.Value String
+    const toString = F2((radix, integer) => {
+        try {
+            const value = Number.prototype.toString.call(integer, radix)
+            return Ok(value)
+        } catch (error) { return Err(error) }
+    })
+
+
     const exports =
-        { parseInt
+        { toString
+        , parseInt
         }
     return exports
 }()
