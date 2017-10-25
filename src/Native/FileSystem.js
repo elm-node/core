@@ -1,7 +1,7 @@
 const _elm_node$core$Native_FileSystem = (_ => {
     const cpr = require( "cpr" )
     const fs = require( "fs" )
-    const mkdirp = require("mkdirp")
+    const mkdirp_ = require("mkdirp")
     const path = require("path")
     const rm = require("rimraf")
     const { nativeBinding, succeed, fail } = _elm_lang$core$Native_Scheduler
@@ -56,14 +56,10 @@ const _elm_node$core$Native_FileSystem = (_ => {
     // writeFile : String -> Int -> Buffer -> Task Decode.Value ()
     const writeFile = F3((filename, mode, buffer) => nativeBinding(callback => {
         try {
-            const dirname = path.dirname(filename)
-            mkdirp(dirname, error => {
+            const options = { mode }
+            fs.writeFile(filename, buffer, options, error => {
                 if (error) return callback(fail(error))
-                const options = { mode }
-                fs.writeFile(filename, buffer, options, error => {
-                    if (error) return callback(fail(error))
-                    return callback(succeed(Tuple0))
-                })
+                return callback(succeed(Tuple0))
             })
         } catch (error) { return callback(fail(error)) }
     }))
@@ -79,9 +75,9 @@ const _elm_node$core$Native_FileSystem = (_ => {
 
 
     // mkdirp : String -> Task Decode.Value ()
-    const mkdirp_ = filename => nativeBinding(callback => {
+    const mkdirp = filename => nativeBinding(callback => {
         try {
-            mkdirp(filename, error => callback(error ? fail(error) : succeed(Tuple0)))
+            mkdirp_(filename, error => callback(error ? fail(error) : succeed(Tuple0)))
         }
         catch (error) { return callback(fail(error)) }
     })
@@ -119,7 +115,7 @@ const _elm_node$core$Native_FileSystem = (_ => {
         , exists
         , isSymlink
         , symlink
-        , mkdirp : mkdirp_
+        , mkdirp
         , readFile
         , remove
         , rename

@@ -30,6 +30,7 @@ import Node.Encoding as Encoding exposing (Encoding(..))
 import Node.Error as Error exposing (Error(..))
 import Node.FileSystem.LowLevel as LowLevel
 import Node.Global exposing (stringToInt)
+import Node.Path as Path
 import Result.Extra as Result
 import Task exposing (Task)
 
@@ -133,14 +134,24 @@ Non-existent directories in the filename path will be created.
 -}
 writeFile : String -> Mode -> Buffer -> Task Error ()
 writeFile filename mode buffer =
-    --TODO move mkdirp here instead of native code
-    case stringToInt 8 mode of
-        Ok mode ->
-            LowLevel.writeFile filename mode buffer
-                |> Task.mapError Error.fromValue
+    stringToInt 8 mode
+        |> Result.unpack Task.fail Task.succeed
+        |> Task.andThen
+            (\mode ->
+                let
+                    dirname =
+                        Path.dirname filename
 
-        Err error ->
-            Task.fail error
+                    writeFile =
+                        LowLevel.writeFile filename mode buffer
+                            |> Task.mapError Error.fromValue
+                in
+                    Task.sequence
+                        [ mkdirp dirname
+                        , writeFile
+                        ]
+                        |> Task.map (always ())
+            )
 
 
 {-| Write a file from a String.

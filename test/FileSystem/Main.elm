@@ -29,7 +29,7 @@ init =
             "output.txt"
 
         testRoot =
-            "test/FileSystem/"
+            "test/FileSystem/tmp/"
 
         filenamePath =
             testRoot ++ filename
@@ -178,8 +178,7 @@ init =
                     |> Task.andThen
                         (\_ ->
                             testing "remove"
-                                |> (\_ -> FileSystem.remove filenamePath)
-                                |> Task.andThen (\_ -> FileSystem.remove (filenamePath ++ "c"))
+                                |> (\_ -> FileSystem.remove testRoot)
                                 |> completedTask "remove"
                         )
                     |> Task.attempt TestComplete
