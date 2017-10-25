@@ -29,7 +29,7 @@ import Node.Buffer as Buffer exposing (Buffer)
 import Node.Encoding as Encoding exposing (Encoding(..))
 import Node.Error as Error exposing (Error(..))
 import Node.FileSystem.LowLevel as LowLevel
-import Node.Global exposing (parseInt)
+import Node.Global exposing (stringToInt)
 import Result.Extra as Result
 import Task exposing (Task)
 
@@ -126,29 +126,21 @@ defaultMode =
     "666"
 
 
-writeFileInternal : String -> Mode -> Buffer -> Task Error ()
-writeFileInternal filename mode buffer =
+{-| Write a file from a Buffer with the default file mode.
+
+Non-existent directories in the filename path will be created.
+
+-}
+writeFile : String -> Mode -> Buffer -> Task Error ()
+writeFile filename mode buffer =
     --TODO move mkdirp here instead of native code
-    --(need to alter mkdirp first to take dirname instead of filename)
-    --(also need a path.dirname equivalent in elm)
-    case parseInt 8 mode of
+    case stringToInt 8 mode of
         Ok mode ->
             LowLevel.writeFile filename mode buffer
                 |> Task.mapError Error.fromValue
 
         Err error ->
             Task.fail error
-
-
-{-| Write a file from a Buffer with the default file mode.
-
-Non-existent directories in the filename path will be created.
-
--}
-writeFile : String -> Buffer -> Task Error ()
-writeFile filename buffer =
-    --TODO add Mode to this signature, remove writeFileInternal
-    writeFileInternal filename defaultMode buffer
 
 
 {-| Write a file from a String.
@@ -159,7 +151,7 @@ Non-existent directories in the filename path will be created.
 writeFileFromString : String -> Mode -> Encoding -> String -> Task Error ()
 writeFileFromString filename mode encoding data =
     (Buffer.fromString encoding data |> Result.unpack Task.fail Task.succeed)
-        |> Task.andThen (writeFileInternal filename mode)
+        |> Task.andThen (writeFile filename mode)
 
 
 {-| Write a file from a Buffer.
@@ -169,7 +161,7 @@ Non-existent directories in the filename path will be created.
 -}
 writeFileFromBuffer : String -> Mode -> Buffer -> Task Error ()
 writeFileFromBuffer filename mode buffer =
-    writeFileInternal filename mode buffer
+    writeFile filename mode buffer
 
 
 {-| Check whether a file exists.
@@ -181,14 +173,14 @@ exists filename =
         |> Task.mapError Error.fromValue
 
 
-{-| Make a directory.
+{-| Make a directory using the given directory name.
 
 Non-existent directories in the path will be created.
 
 -}
 mkdirp : String -> Task Error ()
-mkdirp filename =
-    LowLevel.mkdirp filename
+mkdirp dirname =
+    LowLevel.mkdirp dirname
         |> Task.mapError Error.fromValue
 
 

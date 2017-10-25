@@ -79,7 +79,7 @@ init =
                     |> Task.andThen
                         (\_ ->
                             testing "writeFile"
-                                |> (\_ -> FileSystem.writeFile filenamePath buffer)
+                                |> (\_ -> FileSystem.writeFile filenamePath FileSystem.defaultMode buffer)
                                 |> completedTask "writeFile"
                         )
                     |> Task.andThen

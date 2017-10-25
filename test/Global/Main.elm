@@ -1,6 +1,6 @@
 module Main exposing (main)
 
-import Node.Global exposing (parseInt)
+import Node.Global exposing (stringToInt)
 import Node.Error as Error
 import Result.Extra as Result
 import Task exposing (Task)
@@ -33,7 +33,7 @@ init =
                                 message =
                                     Debug.log "Testing" "parseInt"
                             in
-                                parseInt 16 string
+                                stringToInt 16 string
                                     |> Result.andThen
                                         (\value ->
                                             if value == 1077121085 then
