@@ -17,7 +17,7 @@
 - [x] copy
 - [x] remove
 - [x] rename
-- [ ] appendFile
+- [ ] appendFile ...
 
 ## Global
 - [x] parseInt
@@ -25,13 +25,13 @@
 ## Path
 - [ ] join
 - [ ] dirname
-- [-] basename
+- [-] basename (/usr/file.txt -> file.txt)
 - [-] extname
 
+(Environment?)
 ## OS
 - [ ] homedir
 - [ ] tmpdir
-
 ## Process
 - [ ] env
 

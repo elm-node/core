@@ -147,6 +147,7 @@ Non-existent directories in the filename path will be created.
 -}
 writeFile : String -> Buffer -> Task Error ()
 writeFile filename buffer =
+    --TODO add Mode to this signature, remove writeFileInternal
     writeFileInternal filename defaultMode buffer
 
 
@@ -187,7 +188,6 @@ Non-existent directories in the path will be created.
 -}
 mkdirp : String -> Task Error ()
 mkdirp filename =
-    --TODO check usage, should be dirname instead of filename here.
     LowLevel.mkdirp filename
         |> Task.mapError Error.fromValue
 
