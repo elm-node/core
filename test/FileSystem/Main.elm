@@ -99,15 +99,18 @@ init =
                         )
                     |> Task.andThen
                         (\_ ->
-                            testing "isSymlink"
-                                |> (\_ -> FileSystem.isSymlink symlinkPath)
+                            testing "stat"
+                                |> (\_ -> FileSystem.stat symlinkPath)
                                 |> Task.andThen
-                                    (flip (?)
-                                        ( Task.succeed ()
-                                        , failedTask (symlinkPath ++ " is NOT a symlink")
-                                        )
+                                    (\stats ->
+                                        case stats.type_ of
+                                            FileSystem.SymbolicLink ->
+                                                Task.succeed ()
+
+                                            _ ->
+                                                failedTask (symlinkPath ++ " is NOT a symbolic link")
                                     )
-                                |> completedTask "isSymlink"
+                                |> completedTask "stat"
                         )
                     |> Task.andThen
                         (\_ ->

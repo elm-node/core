@@ -7,7 +7,7 @@ module Node.FileSystem.LowLevel
         , exists
         , mkdirp
         , rename
-        , isSymlink
+        , stat
         , symlink
         )
 
@@ -74,9 +74,9 @@ rename =
     Native.FileSystem.rename
 
 
-isSymlink : String -> Task Decode.Value Bool
-isSymlink =
-    Native.FileSystem.isSymlink
+stat : String -> Task Decode.Value Decode.Value
+stat =
+    Native.FileSystem.stat
 
 
 symlink : String -> String -> Task Decode.Value ()
