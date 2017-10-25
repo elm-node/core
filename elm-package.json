@@ -8,7 +8,8 @@
         "test/Buffer",
         "test/Crypto",
         "test/FileSystem",
-        "test/Global"
+        "test/Global",
+        "test/Path"
     ],
     "exposed-modules": [
         "Node.Buffer",
@@ -16,7 +17,8 @@
         "Node.Encoding",
         "Node.Error",
         "Node.FileSystem",
-        "Node.Global"
+        "Node.Global",
+        "Node.Path"
     ],
     "native-modules": true,
     "dependencies": {
