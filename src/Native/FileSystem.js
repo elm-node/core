@@ -69,6 +69,7 @@ const _elm_node$core$Native_FileSystem = (_ => {
     }))
 
 
+    // exists : String -> Task Decode.Value Bool
     const exists = filename => nativeBinding(callback => {
         try {
             fs.access(filename, fs.constants.F_OK, err => callback(err ? succeed(false) : succeed(true)))
@@ -76,6 +77,8 @@ const _elm_node$core$Native_FileSystem = (_ => {
         catch (error) { return callback(fail(error)) }
     })
 
+
+    // mkdirp : String -> Task Decode.Value ()
     const mkdirp_ = filename => nativeBinding(callback => {
         try {
             mkdirp(filename, error => callback(error ? fail(error) : succeed(Tuple0)))
@@ -83,6 +86,8 @@ const _elm_node$core$Native_FileSystem = (_ => {
         catch (error) { return callback(fail(error)) }
     })
 
+
+    // rename : String -> String -> Task Decode.Value ()
     const rename = F2((from, to) => nativeBinding(callback => {
         try {
             fs.rename(from, to, error => callback(error ? fail(error) : succeed(Tuple0)))
@@ -90,6 +95,8 @@ const _elm_node$core$Native_FileSystem = (_ => {
         catch (error) { return callback(fail(error)) }
     }))
 
+
+    // isSymlink : String -> Task Decode.Value Bool
     const isSymlink = filename => nativeBinding(callback => {
         try {
             fs.lstat(filename, (error, stats) => callback(error ? fail(error) : succeed(stats.isSymbolicLink())))
@@ -97,18 +104,21 @@ const _elm_node$core$Native_FileSystem = (_ => {
         catch (error) { return callback(fail(error)) }
     })
 
-    const makeSymlink = F3((target, filename, type) => nativeBinding(callback => {
+
+    // symlink : String -> String -> Task Decode.Value ()
+    const symlink = F2((target, filename) => nativeBinding(callback => {
         try {
-            fs.symlink(target, filename, type, error => callback(error ? fail(error) : succeed(Tuple0)))
+            fs.symlink(target, filename, error => callback(error ? fail(error) : succeed(Tuple0)))
         }
         catch (error) { return callback(fail(error)) }
     }))
+
 
     const exports =
         { copy
         , exists
         , isSymlink
-        , makeSymlink
+        , symlink
         , mkdirp : mkdirp_
         , readFile
         , remove

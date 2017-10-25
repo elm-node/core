@@ -13,12 +13,12 @@ module Node.FileSystem
         , mkdirp
         , rename
         , isSymlink
-        , makeSymlink
+        , symlink
         )
 
 {-| FileSystem
 
-@docs copy , defaultEncoding , defaultMode , exists , mkdirp , readFile , readFileAsString , remove , rename , writeFile , writeFileFromString , writeFileFromBuffer , isSymlink , makeSymlink
+@docs copy , defaultEncoding , defaultMode , exists , mkdirp , readFile , readFileAsString , remove , rename , writeFile , writeFileFromString , writeFileFromBuffer , isSymlink , symlink
 
 -}
 
@@ -150,7 +150,8 @@ Non-existent directories in the filename path will be created.
 -}
 writeFileFromString : String -> Mode -> Encoding -> String -> Task Error ()
 writeFileFromString filename mode encoding data =
-    (Buffer.fromString encoding data |> Result.unpack Task.fail Task.succeed)
+    Buffer.fromString encoding data
+        |> Result.unpack Task.fail Task.succeed
         |> Task.andThen (writeFile filename mode)
 
 
@@ -192,21 +193,22 @@ rename from to =
         |> Task.mapError Error.fromValue
 
 
+
+--TODO add `stat: String -> Task Error Stats`
+
+
 {-| Check whether a file is a symbolic link.
 -}
 isSymlink : String -> Task Error Bool
 isSymlink filename =
     --TODO replace with `statLink: String -> Task Error Stats` where Stats is a decoded value
-    --TODO add `stat: String -> Task Error Stats`
     LowLevel.isSymlink filename
         |> Task.mapError Error.fromValue
 
 
 {-| Make a symbolic link.
 -}
-makeSymlink : String -> String -> String -> Task Error ()
-makeSymlink target filename type_ =
-    --TODO rename to symlink
-    --TODO remove type support
-    LowLevel.makeSymlink target filename type_
+symlink : String -> String -> Task Error ()
+symlink target filename =
+    LowLevel.symlink target filename
         |> Task.mapError Error.fromValue

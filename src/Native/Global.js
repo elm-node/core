@@ -3,11 +3,12 @@ const _elm_node$core$Native_Global = function () {
     const Ok = _elm_lang$core$Result$Ok
 
 
-    // parseInt
+    // parseInt : Int -> String -> Result Decode.Value Int
     const parseInt = F2((radix, string) => {
         try {
-            // TODO check for value === NaN and Err in that case
+            // radix values integer from 2-36
             const value = global.parseInt(string, radix)
+            // TODO check for value === NaN and Err in that case
             return Ok(value)
         } catch (error) { return Err(error) }
     })

@@ -8,7 +8,7 @@ module Node.FileSystem.LowLevel
         , mkdirp
         , rename
         , isSymlink
-        , makeSymlink
+        , symlink
         )
 
 import Node.Buffer exposing (Buffer)
@@ -79,6 +79,6 @@ isSymlink =
     Native.FileSystem.isSymlink
 
 
-makeSymlink : String -> String -> String -> Task Decode.Value ()
-makeSymlink =
-    Native.FileSystem.makeSymlink
+symlink : String -> String -> Task Decode.Value ()
+symlink =
+    Native.FileSystem.symlink

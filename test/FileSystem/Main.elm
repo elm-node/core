@@ -93,9 +93,9 @@ init =
                         )
                     |> Task.andThen
                         (\_ ->
-                            testing "makeSymlink"
-                                |> (\_ -> FileSystem.makeSymlink filename symlinkPath "file")
-                                |> completedTask "makeSymlink"
+                            testing "symlink"
+                                |> (\_ -> FileSystem.symlink filename symlinkPath)
+                                |> completedTask "symlink"
                         )
                     |> Task.andThen
                         (\_ ->
