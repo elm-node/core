@@ -1,6 +1,8 @@
 module Node.FileSystem
     exposing
-        ( copy
+        ( PathType(..)
+        , Stats
+        , copy
         , defaultEncoding
         , defaultMode
         , readFile
@@ -14,12 +16,11 @@ module Node.FileSystem
         , rename
         , stat
         , symlink
-        , PathType(..)
         )
 
 {-| FileSystem
 
-@docs copy , defaultEncoding , defaultMode , exists , mkdirp , readFile , readFileAsString , remove , rename , writeFile , writeFileFromString , writeFileFromBuffer , stat , symlink , PathType
+@docs PathType , Stats, copy , defaultEncoding , defaultMode , exists , mkdirp , readFile , readFileAsString , remove , rename , writeFile , writeFileFromString , writeFileFromBuffer , stat , symlink
 
 -}
 
@@ -35,6 +36,7 @@ import Node.Global exposing (intToString, stringToInt)
 import Node.Path as Path
 import Result.Extra as Result
 import Task exposing (Task)
+import Time exposing (Time)
 
 
 {-| Default encoding.
@@ -42,6 +44,94 @@ import Task exposing (Task)
 defaultEncoding : Encoding
 defaultEncoding =
     Utf8
+
+
+{-| Path types.
+-}
+type PathType
+    = File
+    | Directory
+    | Socket
+    | SymbolicLink
+
+
+pathTypeFromString : String -> Result String PathType
+pathTypeFromString string =
+    case string of
+        "isDirectory" ->
+            Ok Directory
+
+        "isFile" ->
+            Ok File
+
+        "isSocket" ->
+            Ok Socket
+
+        "isSymbolicLink" ->
+            Ok SymbolicLink
+
+        _ ->
+            Err "Value not recognized."
+
+
+{-| Statistics.
+-}
+type alias Stats =
+    { type_ : PathType
+    , size : Int
+    , mode : Mode
+    , accessed : Time
+    , modified : Time
+    , changed : Time
+    , created : Time
+    }
+
+
+statsFromValue : Decode.Value -> Result String Stats
+statsFromValue =
+    Decode.decodeValue <|
+        (Decode.succeed Stats
+            |> Decode.andMap
+                (Decode.map4
+                    (\isDirectory isFile isSocket isSymbolicLink ->
+                        Dict.fromList
+                            [ ( "isDirectory", isDirectory )
+                            , ( "isFile", isFile )
+                            , ( "isSocket", isSocket )
+                            , ( "isSymbolicLink", isSymbolicLink )
+                            ]
+                            |> Dict.filter (\key value -> value)
+                            |> Dict.keys
+                    )
+                    (Decode.field "isDirectory" Decode.bool)
+                    (Decode.field "isFile" Decode.bool)
+                    (Decode.field "isSocket" Decode.bool)
+                    (Decode.field "isSymbolicLink" Decode.bool)
+                    |> Decode.andThen
+                        (\types ->
+                            if List.length types > 1 then
+                                Decode.fail "More than one type was specified."
+                            else
+                                case List.head types of
+                                    Nothing ->
+                                        Decode.fail "No types were specified."
+
+                                    Just type_ ->
+                                        pathTypeFromString type_ |> Result.unpack Decode.fail Decode.succeed
+                        )
+                )
+            |> Decode.andMap (Decode.field "size" Decode.int)
+            |> Decode.andMap
+                (Decode.field "mode" <|
+                    Decode.andThen
+                        (intToString 8 >> Result.mapError Error.message >> Decode.fromResult)
+                        Decode.int
+                )
+            |> Decode.andMap (Decode.field "atime" Decode.float)
+            |> Decode.andMap (Decode.field "mtime" Decode.float)
+            |> Decode.andMap (Decode.field "ctime" Decode.float)
+            |> Decode.andMap (Decode.field "birthtime" Decode.float)
+        )
 
 
 
@@ -203,84 +293,6 @@ rename : String -> String -> Task Error ()
 rename from to =
     LowLevel.rename from to
         |> Task.mapError Error.fromValue
-
-
-{-| -}
-type PathType
-    = File
-    | Directory
-    | Socket
-    | SymbolicLink
-
-
-pathTypeFromString : String -> Result String PathType
-pathTypeFromString string =
-    case string of
-        "isDirectory" ->
-            Ok Directory
-
-        "isFile" ->
-            Ok File
-
-        "isSocket" ->
-            Ok Socket
-
-        "isSymbolicLink" ->
-            Ok SymbolicLink
-
-        _ ->
-            Err "Value not recognized."
-
-
-type alias Stats =
-    { type_ : PathType
-    , size : Int
-    , mode : Mode
-    }
-
-
-statsFromValue : Decode.Value -> Result String Stats
-statsFromValue =
-    Decode.decodeValue <|
-        (Decode.succeed Stats
-            |> Decode.andMap
-                (Decode.map4
-                    (\isDirectory isFile isSocket isSymbolicLink ->
-                        Dict.fromList
-                            [ ( "isDirectory", isDirectory )
-                            , ( "isFile", isFile )
-                            , ( "isSocket", isSocket )
-                            , ( "isSymbolicLink", isSymbolicLink )
-                            ]
-                            |> Dict.filter (\key value -> value)
-                            |> Dict.keys
-                    )
-                    (Decode.field "isDirectory" Decode.bool)
-                    (Decode.field "isFile" Decode.bool)
-                    (Decode.field "isSocket" Decode.bool)
-                    (Decode.field "isSymbolicLink" Decode.bool)
-                    |> Decode.andThen
-                        (\types ->
-                            if List.length types > 1 then
-                                Decode.fail "More than one type was specified."
-                            else
-                                case List.head types of
-                                    Nothing ->
-                                        Decode.fail "No types were specified."
-
-                                    Just type_ ->
-                                        pathTypeFromString type_ |> Result.unpack Decode.fail Decode.succeed
-                        )
-                )
-            |> Decode.andMap
-                (Decode.field "size" Decode.int)
-            |> Decode.andMap
-                (Decode.field "mode" <|
-                    Decode.andThen
-                        (intToString 8 >> Result.mapError Error.message >> Decode.fromResult)
-                        Decode.int
-                )
-        )
 
 
 {-| Check whether a file is a symbolic link.

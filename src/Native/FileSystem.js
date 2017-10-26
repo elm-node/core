@@ -94,7 +94,7 @@ const _elm_node$core$Native_FileSystem = (_ => {
     }))
 
 
-    // stat : String -> Task Decode.Value Bool
+    // stat : String -> Task Decode.Value Decode.Value
     const stat = filename => nativeBinding(callback => {
         try {
             fs.lstat(filename, (error, stats) => {
@@ -107,6 +107,10 @@ const _elm_node$core$Native_FileSystem = (_ => {
                         , isSymbolicLink : stats.isSymbolicLink()
                         , size : stats.size
                         , mode : stats.mode
+                        , atime : stats.atime
+                        , mtime : stats.mtime
+                        , ctime : stats.ctime
+                        , birthtime : stats.birthtime
                         }
                     return callback(succeed(result))
                 } catch (error) { return callback(fail(error)) }
