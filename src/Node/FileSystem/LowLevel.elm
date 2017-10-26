@@ -8,7 +8,7 @@ module Node.FileSystem.LowLevel
         , mkdirp
         , rename
         , stat
-        , symlink
+        , symbolicLink
         )
 
 import Node.Buffer exposing (Buffer)
@@ -79,6 +79,6 @@ stat =
     Native.FileSystem.stat
 
 
-symlink : String -> String -> Task Decode.Value ()
-symlink =
-    Native.FileSystem.symlink
+symbolicLink : String -> String -> Task Decode.Value ()
+symbolicLink =
+    Native.FileSystem.symbolicLink

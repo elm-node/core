@@ -119,8 +119,8 @@ const _elm_node$core$Native_FileSystem = (_ => {
     })
 
 
-    // symlink : String -> String -> Task Decode.Value ()
-    const symlink = F2((from, to) => nativeBinding(callback => {
+    // symbolicLink : String -> String -> Task Decode.Value ()
+    const symbolicLink = F2((from, to) => nativeBinding(callback => {
         try {
             fs.symlink(from, to, error => callback(error ? fail(error) : succeed(Tuple0)))
         }
@@ -132,7 +132,7 @@ const _elm_node$core$Native_FileSystem = (_ => {
         { copy
         , exists
         , stat
-        , symlink
+        , symbolicLink
         , mkdirp
         , readFile
         , remove

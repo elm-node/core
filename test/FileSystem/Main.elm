@@ -94,7 +94,7 @@ init =
                     |> Task.andThen
                         (\_ ->
                             testing "symlink"
-                                |> (\_ -> FileSystem.symlink filename symlinkPath)
+                                |> (\_ -> FileSystem.symbolicLink filename symlinkPath)
                                 |> completedTask "symlink"
                         )
                     |> Task.andThen

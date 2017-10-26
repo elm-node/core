@@ -15,12 +15,12 @@ module Node.FileSystem
         , mkdirp
         , rename
         , stat
-        , symlink
+        , symbolicLink
         )
 
 {-| FileSystem
 
-@docs PathType , Stats, copy , defaultEncoding , defaultMode , exists , mkdirp , readFile , readFileAsString , remove , rename , writeFile , writeFileFromString , writeFileFromBuffer , stat , symlink
+@docs PathType , Stats, copy , defaultEncoding , defaultMode , exists , mkdirp , readFile , readFileAsString , remove , rename , writeFile , writeFileFromString , writeFileFromBuffer , stat , symbolicLink
 
 -}
 
@@ -311,7 +311,7 @@ stat filename =
 
 {-| Make a symbolic link.
 -}
-symlink : String -> String -> Task Error ()
-symlink from to =
-    LowLevel.symlink from to
+symbolicLink : String -> String -> Task Error ()
+symbolicLink from to =
+    LowLevel.symbolicLink from to
         |> Task.mapError Error.fromValue
