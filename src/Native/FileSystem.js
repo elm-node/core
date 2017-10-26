@@ -107,10 +107,10 @@ const _elm_node$core$Native_FileSystem = (_ => {
                         , isSymbolicLink : stats.isSymbolicLink()
                         , size : stats.size
                         , mode : stats.mode
-                        , atime : stats.atime
-                        , mtime : stats.mtime
-                        , ctime : stats.ctime
-                        , birthtime : stats.birthtime
+                        , atimeMs : stats.atimeMs
+                        , mtimeMs : stats.mtimeMs
+                        , ctimeMs : stats.ctimeMs
+                        , birthtimeMs : stats.birthtimeMs
                         }
                     return callback(succeed(result))
                 } catch (error) { return callback(fail(error)) }
@@ -120,9 +120,9 @@ const _elm_node$core$Native_FileSystem = (_ => {
 
 
     // symlink : String -> String -> Task Decode.Value ()
-    const symlink = F2((target, filename) => nativeBinding(callback => {
+    const symlink = F2((from, to) => nativeBinding(callback => {
         try {
-            fs.symlink(target, filename, error => callback(error ? fail(error) : succeed(Tuple0)))
+            fs.symlink(from, to, error => callback(error ? fail(error) : succeed(Tuple0)))
         }
         catch (error) { return callback(fail(error)) }
     }))

@@ -127,10 +127,10 @@ statsFromValue =
                         (intToString 8 >> Result.mapError Error.message >> Decode.fromResult)
                         Decode.int
                 )
-            |> Decode.andMap (Decode.field "atime" Decode.float)
-            |> Decode.andMap (Decode.field "mtime" Decode.float)
-            |> Decode.andMap (Decode.field "ctime" Decode.float)
-            |> Decode.andMap (Decode.field "birthtime" Decode.float)
+            |> Decode.andMap (Decode.field "atimeMs" Decode.float)
+            |> Decode.andMap (Decode.field "mtimeMs" Decode.float)
+            |> Decode.andMap (Decode.field "ctimeMs" Decode.float)
+            |> Decode.andMap (Decode.field "birthtimeMs" Decode.float)
         )
 
 
@@ -312,6 +312,6 @@ stat filename =
 {-| Make a symbolic link.
 -}
 symlink : String -> String -> Task Error ()
-symlink target filename =
-    LowLevel.symlink target filename
+symlink from to =
+    LowLevel.symlink from to
         |> Task.mapError Error.fromValue
