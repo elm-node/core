@@ -11,7 +11,7 @@ module Node.FileSystem
         , readFileAsString
         , remove
         , rename
-        , stat
+        , statistics
         , symbolicLink
         , writeFile
         , writeFileFromString
@@ -24,7 +24,7 @@ module Node.FileSystem
 
 ## Query
 
-@docs Stats , PathType , exists , stat
+@docs Stats , PathType , exists , statistics
 
 
 ## Manage
@@ -178,8 +178,8 @@ exists path =
 
 {-| Get statistics for a given path.
 -}
-stat : String -> Task Error Stats
-stat path =
+statistics : String -> Task Error Stats
+statistics path =
     LowLevel.stat path
         |> Task.mapError Error.fromValue
         |> Task.andThen
@@ -243,7 +243,7 @@ rename from to =
 -}
 symbolicLink : String -> String -> Task Error ()
 symbolicLink from to =
-    LowLevel.symbolicLink from to
+    LowLevel.symlink from to
         |> Task.mapError Error.fromValue
 
 

@@ -100,7 +100,7 @@ init =
                     |> Task.andThen
                         (\_ ->
                             testing "stat"
-                                |> (\_ -> FileSystem.stat symlinkPath)
+                                |> (\_ -> FileSystem.statistics symlinkPath)
                                 |> Task.andThen
                                     (\stats ->
                                         case stats.type_ of

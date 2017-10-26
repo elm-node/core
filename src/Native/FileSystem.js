@@ -26,10 +26,28 @@ const _elm_node$core$Native_FileSystem = (_ => {
                     if (error && files) return callback(succeed({ errors : error.list, files }))
                     // copying a single file with no errors returns files and error undefined ...
                     return callback(succeed({ errors : [], files : files || [ to ] }))
-                } catch (error) { return callback(fail(error)) }
+                } catch (error2) { return callback(fail(error2)) }
             })
         } catch (error) { return callback(fail(error)) }
     }))
+
+
+    // exists : String -> Task Decode.Value Bool
+    const exists = path => nativeBinding(callback => {
+        try {
+            fs.access(path, fs.constants.F_OK, error => callback(error ? succeed(false) : succeed(true)))
+        }
+        catch (error) { return callback(fail(error)) }
+    })
+
+
+    // mkdirp : String -> Task Decode.Value ()
+    const mkdirp = filename => nativeBinding(callback => {
+        try {
+            mkdirp_(filename, error => callback(error ? fail(error) : succeed(Tuple0)))
+        }
+        catch (error) { return callback(fail(error)) }
+    })
 
 
     // readFile : String -> Task Decode.Value Buffer
@@ -51,36 +69,6 @@ const _elm_node$core$Native_FileSystem = (_ => {
                 return callback(succeed(Tuple0))
             })
         } catch (error) { return callback(fail(error)) }
-    })
-
-
-    // writeFile : String -> Int -> Buffer -> Task Decode.Value ()
-    const writeFile = F3((path, mode, buffer) => nativeBinding(callback => {
-        try {
-            const options = { mode }
-            fs.writeFile(path, buffer, options, error => {
-                if (error) return callback(fail(error))
-                return callback(succeed(Tuple0))
-            })
-        } catch (error) { return callback(fail(error)) }
-    }))
-
-
-    // exists : String -> Task Decode.Value Bool
-    const exists = path => nativeBinding(callback => {
-        try {
-            fs.access(path, fs.constants.F_OK, error => callback(error ? succeed(false) : succeed(true)))
-        }
-        catch (error) { return callback(fail(error)) }
-    })
-
-
-    // mkdirp : String -> Task Decode.Value ()
-    const mkdirp = filename => nativeBinding(callback => {
-        try {
-            mkdirp_(filename, error => callback(error ? fail(error) : succeed(Tuple0)))
-        }
-        catch (error) { return callback(fail(error)) }
     })
 
 
@@ -112,14 +100,14 @@ const _elm_node$core$Native_FileSystem = (_ => {
                         , birthtimeMs : stats.birthtimeMs
                         }
                     return callback(succeed(result))
-                } catch (error) { return callback(fail(error)) }
+                } catch (error2) { return callback(fail(error2)) }
             })
         } catch (error) { return callback(fail(error)) }
     })
 
 
     // symbolicLink : String -> String -> Task Decode.Value ()
-    const symbolicLink = F2((from, to) => nativeBinding(callback => {
+    const symlink = F2((from, to) => nativeBinding(callback => {
         try {
             fs.symlink(from, to, error => callback(error ? fail(error) : succeed(Tuple0)))
         }
@@ -127,15 +115,27 @@ const _elm_node$core$Native_FileSystem = (_ => {
     }))
 
 
+    // writeFile : String -> Int -> Buffer -> Task Decode.Value ()
+    const writeFile = F3((path, mode, buffer) => nativeBinding(callback => {
+        try {
+            const options = { mode }
+            fs.writeFile(path, buffer, options, error => {
+                if (error) return callback(fail(error))
+                return callback(succeed(Tuple0))
+            })
+        } catch (error) { return callback(fail(error)) }
+    }))
+
+
     const exports =
         { copy
         , exists
-        , stat
-        , symbolicLink
         , mkdirp
         , readFile
         , remove
         , rename
+        , stat
+        , symlink
         , writeFile
         }
     return exports

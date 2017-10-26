@@ -8,7 +8,7 @@ module Node.FileSystem.LowLevel
         , mkdirp
         , rename
         , stat
-        , symbolicLink
+        , symlink
         )
 
 import Node.Buffer exposing (Buffer)
@@ -44,21 +44,6 @@ copy =
     Native.FileSystem.copy
 
 
-readFile : String -> Task Decode.Value Buffer
-readFile =
-    Native.FileSystem.readFile
-
-
-remove : String -> Task Decode.Value ()
-remove =
-    Native.FileSystem.remove
-
-
-writeFile : String -> Int -> Buffer -> Task Decode.Value ()
-writeFile =
-    Native.FileSystem.writeFile
-
-
 exists : String -> Task Decode.Value Bool
 exists =
     Native.FileSystem.exists
@@ -67,6 +52,16 @@ exists =
 mkdirp : String -> Task Decode.Value ()
 mkdirp =
     Native.FileSystem.mkdirp
+
+
+readFile : String -> Task Decode.Value Buffer
+readFile =
+    Native.FileSystem.readFile
+
+
+remove : String -> Task Decode.Value ()
+remove =
+    Native.FileSystem.remove
 
 
 rename : String -> String -> Task Decode.Value ()
@@ -79,6 +74,11 @@ stat =
     Native.FileSystem.stat
 
 
-symbolicLink : String -> String -> Task Decode.Value ()
-symbolicLink =
-    Native.FileSystem.symbolicLink
+symlink : String -> String -> Task Decode.Value ()
+symlink =
+    Native.FileSystem.symlink
+
+
+writeFile : String -> Int -> Buffer -> Task Decode.Value ()
+writeFile =
+    Native.FileSystem.writeFile
