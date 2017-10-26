@@ -49,6 +49,24 @@ init =
                         (\_ ->
                             let
                                 message =
+                                    Debug.log "Testing" "delimiter"
+
+                                value =
+                                    Path.delimiter
+                            in
+                                if value == ":" || value == ";" then
+                                    let
+                                        message =
+                                            Debug.log "Complete" "delimiter"
+                                    in
+                                        Ok ()
+                                else
+                                    Err <| Error.Error "Failed" value
+                        )
+                    |> Result.andThen
+                        (\_ ->
+                            let
+                                message =
                                     Debug.log "Testing" "dirname"
 
                                 value =
@@ -94,6 +112,24 @@ init =
                                     let
                                         message =
                                             Debug.log "Complete" "join"
+                                    in
+                                        Ok ()
+                                else
+                                    Err <| Error.Error "Failed" value
+                        )
+                    |> Result.andThen
+                        (\_ ->
+                            let
+                                message =
+                                    Debug.log "Testing" "separator"
+
+                                value =
+                                    Path.separator
+                            in
+                                if value == "/" || value == "\\" then
+                                    let
+                                        message =
+                                            Debug.log "Complete" "separator"
                                     in
                                         Ok ()
                                 else

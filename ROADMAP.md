@@ -1,21 +1,5 @@
 # Roadmap
 
-## OperatingSystem
-- [-] hostname
----
-- [-] architecture
-- [-] processors
-- [-] freeMemory
-- [-] totalMemory
-- [-] networkInterfaces
----
-- [-] platform
-- [-] release (i.e. os version)
----
-- [-] username
-- [x] home
-- [x] tmp
-
 ## Child Process
 - [ ] spawn
 
@@ -34,3 +18,17 @@
 
 ## Process
 - [-] versions (i.e. node and it's dependencies versions)
+
+## OperatingSystem
+- [-] hostname
+---
+- [-] architecture
+- [-] processors
+- [-] freeMemory
+- [-] totalMemory
+- [-] networkInterfaces
+---
+- [-] platform
+- [-] release (i.e. os version)
+---
+- [-] username

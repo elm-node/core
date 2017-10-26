@@ -7,6 +7,10 @@ const _elm_node$core$Native_Path = function () {
     const basename = path.basename
 
 
+    // delimiter : String
+    const delimiter = path.delimiter
+
+
     // dirname : String -> String
     const dirname = path.dirname
 
@@ -19,11 +23,17 @@ const _elm_node$core$Native_Path = function () {
     const join = list => path.join.apply(path, toJSArray(fromList(list)))
 
 
+    // sep : String
+    const sep = path.sep
+
+
     const exports =
         { basename
+        , delimiter
         , dirname
         , extname
         , join
+        , sep
         }
     return exports
 }()

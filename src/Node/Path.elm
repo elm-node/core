@@ -1,14 +1,16 @@
 module Node.Path
     exposing
         ( basename
+        , delimiter
         , dirname
         , extname
         , join
+        , separator
         )
 
 {-| Path
 
-@docs basename , dirname , extname , join
+@docs basename , delimiter , dirname , extname , join , separator
 
 -}
 
@@ -20,6 +22,13 @@ import Native.Path
 basename : String -> String
 basename =
     Native.Path.basename
+
+
+{-| The platform-specific path delimiter.
+-}
+delimiter : String
+delimiter =
+    Native.Path.delimiter
 
 
 {-| Extract the directory name from a filename.
@@ -41,3 +50,10 @@ extname =
 join : List String -> String
 join =
     Native.Path.join
+
+
+{-| The platform-specific path segment separator.
+-}
+separator : String
+separator =
+    Native.Path.sep
