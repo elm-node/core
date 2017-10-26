@@ -8,7 +8,8 @@
     "test:Crypto": "elm-make test/Crypto/Main.elm --output test/Crypto/main.js && node test/Crypto/index.js",
     "test:FileSystem": "elm-make test/FileSystem/Main.elm --output test/FileSystem/main.js && node test/FileSystem/index.js",
     "test:Global": "elm-make test/Global/Main.elm --output test/Global/main.js && node test/Global/index.js",
-    "test:Path": "elm-make test/Path/Main.elm --output test/Path/main.js && node test/Path/index.js"
+    "test:Path": "elm-make test/Path/Main.elm --output test/Path/main.js && node test/Path/index.js",
+    "test:Process": "elm-make test/Process/Main.elm --output test/Process/main.js && node test/Process/index.js"
   },
   "repository": "elm-node/core",
   "author": "Alexandre Gigliotti <alex@panosoft.com>",

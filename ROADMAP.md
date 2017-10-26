@@ -1,10 +1,29 @@
 # Roadmap
 
-## Buffer
-- [-] concat
-- [-] slice
+## Process
+- [-] versions (i.e. node and it's dependencies versions)
+---
+- [x] environment
+- [x] cwd
 
-## Crypto
+## OperatingSystem
+- [-] hostname
+---
+- [-] architecture
+- [-] processors
+- [-] freeMemory
+- [-] totalMemory
+- [-] networkInterfaces
+---
+- [-] platform
+- [-] release (i.e. os version)
+---
+- [-] username
+- [ ] home
+- [ ] tmp
+
+## Child Process
+- [ ] spawn
 
 ## FileSystem
 - [ ] appendFile
@@ -12,17 +31,9 @@
 - [ ] close : FileDescriptor ->
 - [ ] flush : FileDescriptor ->
 - [ ] append : FileDescriptor ->
+- [ ] read : FileDescriptor ->
+- [ ] write : FileDescriptor ->
 
-## Global
-
-## Path
-
-(Environment?)
-## OS
-- [ ] homedir
-- [ ] tmpdir
-## Process
-- [ ] env
-
-## Child Process
-- [ ] spawn
+## Buffer
+- [-] concat
+- [-] slice
