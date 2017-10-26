@@ -9,6 +9,7 @@
         "test/Crypto",
         "test/FileSystem",
         "test/Global",
+        "test/OperatingSystem",
         "test/Path",
         "test/Process"
     ],
@@ -19,6 +20,7 @@
         "Node.Error",
         "Node.FileSystem",
         "Node.Global",
+        "Node.OperatingSystem",
         "Node.Path",
         "Node.Process"
     ],

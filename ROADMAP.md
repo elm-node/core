@@ -1,11 +1,5 @@
 # Roadmap
 
-## Process
-- [-] versions (i.e. node and it's dependencies versions)
----
-- [x] environment
-- [x] cwd
-
 ## OperatingSystem
 - [-] hostname
 ---
@@ -19,8 +13,8 @@
 - [-] release (i.e. os version)
 ---
 - [-] username
-- [ ] home
-- [ ] tmp
+- [x] home
+- [x] tmp
 
 ## Child Process
 - [ ] spawn
@@ -37,3 +31,6 @@
 ## Buffer
 - [-] concat
 - [-] slice
+
+## Process
+- [-] versions (i.e. node and it's dependencies versions)
