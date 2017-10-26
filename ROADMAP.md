@@ -7,7 +7,11 @@
 ## Crypto
 
 ## FileSystem
-- [ ] appendFile ...
+- [ ] appendFile
+- [ ] open : FileDescriptor ->
+- [ ] close : FileDescriptor ->
+- [ ] flush : FileDescriptor ->
+- [ ] append : FileDescriptor ->
 
 ## Global
 

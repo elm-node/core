@@ -2,7 +2,6 @@ const _elm_node$core$Native_FileSystem = (_ => {
     const cpr = require( "cpr" )
     const fs = require( "fs" )
     const mkdirp_ = require("mkdirp")
-    const path = require("path")
     const rm = require("rimraf")
     const { nativeBinding, succeed, fail } = _elm_lang$core$Native_Scheduler
     const { Tuple0 } = _elm_lang$core$Native_Utils
@@ -56,10 +55,10 @@ const _elm_node$core$Native_FileSystem = (_ => {
 
 
     // writeFile : String -> Int -> Buffer -> Task Decode.Value ()
-    const writeFile = F3((filename, mode, buffer) => nativeBinding(callback => {
+    const writeFile = F3((path, mode, buffer) => nativeBinding(callback => {
         try {
             const options = { mode }
-            fs.writeFile(filename, buffer, options, error => {
+            fs.writeFile(path, buffer, options, error => {
                 if (error) return callback(fail(error))
                 return callback(succeed(Tuple0))
             })
@@ -68,9 +67,9 @@ const _elm_node$core$Native_FileSystem = (_ => {
 
 
     // exists : String -> Task Decode.Value Bool
-    const exists = filename => nativeBinding(callback => {
+    const exists = path => nativeBinding(callback => {
         try {
-            fs.access(filename, fs.constants.F_OK, error => callback(error ? succeed(false) : succeed(true)))
+            fs.access(path, fs.constants.F_OK, error => callback(error ? succeed(false) : succeed(true)))
         }
         catch (error) { return callback(fail(error)) }
     })
@@ -95,9 +94,9 @@ const _elm_node$core$Native_FileSystem = (_ => {
 
 
     // stat : String -> Task Decode.Value Decode.Value
-    const stat = filename => nativeBinding(callback => {
+    const stat = path => nativeBinding(callback => {
         try {
-            fs.lstat(filename, (error, stats) => {
+            fs.lstat(path, (error, stats) => {
                 try {
                     if (error) return callback(fail(error))
                     const result =

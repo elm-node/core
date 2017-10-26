@@ -168,12 +168,6 @@ init =
                         )
                     |> Task.andThen
                         (\_ ->
-                            testing "writeFileFromBuffer"
-                                |> (\_ -> FileSystem.writeFileFromBuffer filenamePath "666" buffer)
-                                |> completedTask "writeFileFromBuffer"
-                        )
-                    |> Task.andThen
-                        (\_ ->
                             testing "copy"
                                 |> (\_ -> FileSystem.copy False (filenamePath ++ "c") filenamePath)
                                 |> completedTask "copy"

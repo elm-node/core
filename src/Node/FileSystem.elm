@@ -5,22 +5,41 @@ module Node.FileSystem
         , copy
         , defaultEncoding
         , defaultMode
+        , exists
+        , mkdirp
         , readFile
         , readFileAsString
         , remove
-        , writeFile
-        , writeFileFromBuffer
-        , writeFileFromString
-        , exists
-        , mkdirp
         , rename
         , stat
         , symbolicLink
+        , writeFile
+        , writeFileFromString
         )
 
 {-| FileSystem
 
-@docs PathType , Stats, copy , defaultEncoding , defaultMode , exists , mkdirp , readFile , readFileAsString , remove , rename , writeFile , writeFileFromString , writeFileFromBuffer , stat , symbolicLink
+@docs defaultEncoding , defaultMode
+
+
+## Query
+
+@docs Stats , PathType , exists , stat
+
+
+## Manage
+
+@docs copy , mkdirp , remove , rename , symbolicLink
+
+
+## Read
+
+@docs readFile , readFileAsString
+
+
+## Write
+
+@docs writeFile , writeFileFromString
 
 -}
 
@@ -39,11 +58,26 @@ import Task exposing (Task)
 import Time exposing (Time)
 
 
-{-| Default encoding.
+{-| Default encoding (Utf8).
 -}
 defaultEncoding : Encoding
 defaultEncoding =
     Utf8
+
+
+type alias Mode =
+    String
+
+
+{-| Default mode (Read and Write access for Owner, Group, and Others).
+-}
+defaultMode : Mode
+defaultMode =
+    "666"
+
+
+
+-- QUERY
 
 
 {-| Path types.
@@ -71,10 +105,10 @@ pathTypeFromString string =
             Ok SymbolicLink
 
         _ ->
-            Err "Value not recognized."
+            Err <| "Value not recognized: " ++ string
 
 
-{-| Statistics.
+{-| Path statistics.
 -}
 type alias Stats =
     { type_ : PathType
@@ -134,8 +168,26 @@ statsFromValue =
         )
 
 
+{-| Check whether a path exists.
+-}
+exists : String -> Task Error Bool
+exists path =
+    LowLevel.exists path
+        |> Task.mapError Error.fromValue
 
--- COPY
+
+{-| Get statistics for a given path.
+-}
+stat : String -> Task Error Stats
+stat path =
+    LowLevel.stat path
+        |> Task.mapError Error.fromValue
+        |> Task.andThen
+            (statsFromValue >> Result.unpack (Error "" >> Task.fail) Task.succeed)
+
+
+
+-- MANAGEMENT
 
 
 {-| Copy a file or directory recursively.
@@ -171,6 +223,30 @@ copy overwrite to from =
             |> Task.andThen (decode >> Result.unpack (Error "FileSystem" >> Task.fail) Task.succeed)
 
 
+{-| Remove a file or directory recursively.
+-}
+remove : String -> Task Error ()
+remove filename =
+    LowLevel.remove filename
+        |> Task.mapError Error.fromValue
+
+
+{-| Rename a file.
+-}
+rename : String -> String -> Task Error ()
+rename from to =
+    LowLevel.rename from to
+        |> Task.mapError Error.fromValue
+
+
+{-| Make a symbolic link.
+-}
+symbolicLink : String -> String -> Task Error ()
+symbolicLink from to =
+    LowLevel.symbolicLink from to
+        |> Task.mapError Error.fromValue
+
+
 
 -- READ
 
@@ -193,87 +269,7 @@ readFileAsString filename encoding =
 
 
 
--- REMOVE
-
-
-{-| Remove a file or directory recursively.
--}
-remove : String -> Task Error ()
-remove filename =
-    LowLevel.remove filename
-        |> Task.mapError Error.fromValue
-
-
-
 -- WRITE
-
-
-type alias Mode =
-    String
-
-
-{-| Default mode.
--}
-defaultMode : String
-defaultMode =
-    "666"
-
-
-{-| Write a file from a Buffer with the default file mode.
-
-Non-existent directories in the filename path will be created.
-
--}
-writeFile : String -> Mode -> Buffer -> Task Error ()
-writeFile filename mode buffer =
-    stringToInt 8 mode
-        |> Result.unpack Task.fail Task.succeed
-        |> Task.andThen
-            (\mode ->
-                let
-                    dirname =
-                        Path.dirname filename
-
-                    writeFile =
-                        LowLevel.writeFile filename mode buffer
-                            |> Task.mapError Error.fromValue
-                in
-                    Task.sequence
-                        [ mkdirp dirname
-                        , writeFile
-                        ]
-                        |> Task.map (always ())
-            )
-
-
-{-| Write a file from a String.
-
-Non-existent directories in the filename path will be created.
-
--}
-writeFileFromString : String -> Mode -> Encoding -> String -> Task Error ()
-writeFileFromString filename mode encoding data =
-    Buffer.fromString encoding data
-        |> Result.unpack Task.fail Task.succeed
-        |> Task.andThen (writeFile filename mode)
-
-
-{-| Write a file from a Buffer.
-
-Non-existent directories in the filename path will be created.
-
--}
-writeFileFromBuffer : String -> Mode -> Buffer -> Task Error ()
-writeFileFromBuffer filename mode buffer =
-    writeFile filename mode buffer
-
-
-{-| Check whether a file exists.
--}
-exists : String -> Task Error Bool
-exists filename =
-    LowLevel.exists filename
-        |> Task.mapError Error.fromValue
 
 
 {-| Make a directory using the given directory name.
@@ -287,31 +283,40 @@ mkdirp dirname =
         |> Task.mapError Error.fromValue
 
 
-{-| Rename a file.
--}
-rename : String -> String -> Task Error ()
-rename from to =
-    LowLevel.rename from to
-        |> Task.mapError Error.fromValue
+{-| Write a file from a Buffer.
 
+Non-existent directories in the filename path will be created.
 
-{-| Check whether a file is a symbolic link.
 -}
-stat : String -> Task Error Stats
-stat filename =
-    LowLevel.stat filename
-        |> Task.mapError Error.fromValue
+writeFile : String -> Mode -> Buffer -> Task Error ()
+writeFile path mode buffer =
+    stringToInt 8 mode
+        |> Result.unpack Task.fail Task.succeed
         |> Task.andThen
-            (statsFromValue >> Result.unpack (Error "" >> Task.fail) Task.succeed)
+            (\mode ->
+                let
+                    dirname =
+                        Path.dirname path
+
+                    writeFile =
+                        LowLevel.writeFile path mode buffer
+                            |> Task.mapError Error.fromValue
+                in
+                    Task.sequence
+                        [ mkdirp dirname
+                        , writeFile
+                        ]
+                        |> Task.map (always ())
+            )
 
 
+{-| Write a file from a String.
 
---TODO add `realpath: String -> Task Error String`
+Non-existent directories in the file's path will be created.
 
-
-{-| Make a symbolic link.
 -}
-symbolicLink : String -> String -> Task Error ()
-symbolicLink from to =
-    LowLevel.symbolicLink from to
-        |> Task.mapError Error.fromValue
+writeFileFromString : String -> Mode -> Encoding -> String -> Task Error ()
+writeFileFromString path mode encoding data =
+    Buffer.fromString encoding data
+        |> Result.unpack Task.fail Task.succeed
+        |> Task.andThen (writeFile path mode)
