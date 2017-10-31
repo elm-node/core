@@ -6,6 +6,7 @@
     "source-directories": [
         "src",
         "test/Buffer",
+        "test/ChildProcess",
         "test/Crypto",
         "test/FileSystem",
         "test/Global",
@@ -15,6 +16,7 @@
     ],
     "exposed-modules": [
         "Node.Buffer",
+        "Node.ChildProcess",
         "Node.Crypto",
         "Node.Encoding",
         "Node.Error",

@@ -1,7 +1,8 @@
 # Roadmap
 
 ## Child Process
-- [ ] spawn
+- [x] spawn
+- [-] exec
 
 ## FileSystem
 - [ ] appendFile
@@ -11,13 +12,14 @@
 - [ ] append : FileDescriptor ->
 - [ ] read : FileDescriptor ->
 - [ ] write : FileDescriptor ->
+- [ ] readdir
 
 ## Buffer
 - [-] concat
 - [-] slice
 
 ## Process
-- [-] versions (i.e. node and it's dependencies versions)
+- [-] versions (i.e. node and it's internal dependency versions)
 
 ## OperatingSystem
 - [-] hostname
