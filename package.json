@@ -1,6 +1,6 @@
 {
   "name": "@elm-node/core",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "Native bindings to Node.js's core libraries.",
   "scripts": {
     "test": "npm-run-all test:*",
