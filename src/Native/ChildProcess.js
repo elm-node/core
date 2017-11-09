@@ -23,8 +23,8 @@ const _elm_node$core$Native_ChildProcess = function () {
                     error = error2
                 } catch (error3) { error = error3 }
             })
-            // close: all io streams closed, one of code or signal will be non-null ...
-            // always emitted after error ...
+            // close: all io streams closed, always emitted after error ...
+            // one of code or signal will be non-null
             subprocess.on("close", (code, signal) => {
                 try {
                     if (error) return callback(fail(error))

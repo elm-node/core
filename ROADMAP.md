@@ -1,9 +1,5 @@
 # Roadmap
 
-## Child Process
-- [x] spawn
-- [-] exec
-
 ## FileSystem
 - [ ] appendFile
 - [ ] open : FileDescriptor ->
@@ -12,7 +8,7 @@
 - [ ] append : FileDescriptor ->
 - [ ] read : FileDescriptor ->
 - [ ] write : FileDescriptor ->
-- [ ] readdir
+- [ ] readdir (list)
 
 ## Buffer
 - [-] concat
