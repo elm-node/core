@@ -106,10 +106,10 @@ const _elm_node$core$Native_FileSystem = (_ => {
     })
 
 
-    // symbolicLink : String -> String -> Task Decode.Value ()
-    const symlink = F2((from, to) => nativeBinding(callback => {
+    // symbolicLink : String -> String -> String -> Task Decode.Value ()
+    const symlink = F3((from, to, type) => nativeBinding(callback => {
         try {
-            fs.symlink(from, to, error => callback(error ? fail(error) : succeed(Tuple0)))
+            fs.symlink(from, to, type, error => callback(error ? fail(error) : succeed(Tuple0)))
         }
         catch (error) { return callback(fail(error)) }
     }))

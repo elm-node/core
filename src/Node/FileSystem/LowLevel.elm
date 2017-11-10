@@ -74,7 +74,7 @@ stat =
     Native.FileSystem.stat
 
 
-symlink : String -> String -> Task Decode.Value ()
+symlink : String -> String -> String -> Task Decode.Value ()
 symlink =
     Native.FileSystem.symlink
 

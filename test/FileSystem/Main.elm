@@ -38,7 +38,7 @@ init =
             "link"
 
         symlinkPath =
-            testRoot ++ symLink
+            symLink
 
         data =
             "data"
@@ -93,13 +93,13 @@ init =
                         )
                     |> Task.andThen
                         (\_ ->
-                            testing "symlink"
-                                |> (\_ -> FileSystem.symbolicLink filename symlinkPath)
-                                |> completedTask "symlink"
+                            testing "symbolicLink"
+                                |> (\_ -> FileSystem.symbolicLink filenamePath symlinkPath)
+                                |> completedTask "symbolicLink"
                         )
                     |> Task.andThen
                         (\_ ->
-                            testing "stat"
+                            testing "statistics"
                                 |> (\_ -> FileSystem.statistics symlinkPath)
                                 |> Task.andThen
                                     (\stats ->
@@ -110,11 +110,11 @@ init =
                                             _ ->
                                                 failedTask (symlinkPath ++ " is NOT a symbolic link")
                                     )
-                                |> completedTask "stat"
+                                |> completedTask "statistics"
                         )
                     |> Task.andThen
                         (\_ ->
-                            testing "exists symlink"
+                            testing "exists"
                                 |> (\_ -> FileSystem.exists symlinkPath)
                                 |> Task.andThen
                                     (flip (?)
@@ -122,7 +122,7 @@ init =
                                         , failedTask (symlinkPath ++ " doesn't exist")
                                         )
                                     )
-                                |> completedTask "exists symlink"
+                                |> completedTask "exists"
                         )
                     |> Task.andThen
                         (\_ ->

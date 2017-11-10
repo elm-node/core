@@ -52,6 +52,7 @@ import Node.Encoding as Encoding exposing (Encoding(..))
 import Node.Error as Error exposing (Error(..))
 import Node.FileSystem.LowLevel as LowLevel
 import Node.Global exposing (intToString, stringToInt)
+import Node.OperatingSystem as OperatingSystem
 import Node.Path as Path
 import Result.Extra as Result
 import Task exposing (Task)
@@ -239,12 +240,60 @@ rename from to =
         |> Task.mapError Error.fromValue
 
 
+type SymbolicLinkType
+    = SymbolicLinkFile
+    | SymbolicLinkDirectory
+
+
+symbolicLinkTypetoString : SymbolicLinkType -> String
+symbolicLinkTypetoString symbolicLinkType =
+    case symbolicLinkType of
+        SymbolicLinkFile ->
+            "file"
+
+        SymbolicLinkDirectory ->
+            "dir"
+
+
 {-| Make a symbolic link.
 -}
 symbolicLink : String -> String -> Task Error ()
 symbolicLink from to =
-    LowLevel.symlink from to
-        |> Task.mapError Error.fromValue
+    let
+        resolveWindowsSymbolicLinkType path =
+            statistics path
+                |> Task.andThen
+                    (\{ type_ } ->
+                        case type_ of
+                            Directory ->
+                                Task.succeed SymbolicLinkDirectory
+
+                            File ->
+                                Task.succeed SymbolicLinkFile
+
+                            _ ->
+                                Task.fail <|
+                                    Error
+                                        ("Symbolic link type could not be resolved: Unsupported file type: " ++ toString type_)
+                                        ""
+                    )
+    in
+        OperatingSystem.platform
+            |> Result.unpack
+                Task.fail
+                (\platform ->
+                    case platform of
+                        OperatingSystem.Windows ->
+                            resolveWindowsSymbolicLinkType from
+
+                        _ ->
+                            Task.succeed SymbolicLinkFile
+                )
+            |> Task.andThen
+                (\symbolicLinkType ->
+                    LowLevel.symlink from to (symbolicLinkTypetoString symbolicLinkType)
+                        |> Task.mapError Error.fromValue
+                )
 
 
 
