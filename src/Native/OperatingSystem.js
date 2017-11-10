@@ -13,6 +13,15 @@ const _elm_node$core$Native_OperatingSystem = function () {
     }()
 
 
+    // platform : Result Decode.Value String
+    const platform = function () {
+        try {
+            const value = os.platform()
+            return Ok(value)
+        } catch (error) { return Err(error) }
+    }()
+
+
     // tmpdir : Result Decode.Value String
     const tmpdir = function () {
         try {
@@ -24,6 +33,7 @@ const _elm_node$core$Native_OperatingSystem = function () {
 
     const exports =
         { homedir
+        , platform
         , tmpdir
         }
     return exports

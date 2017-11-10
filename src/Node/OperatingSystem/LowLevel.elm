@@ -1,6 +1,7 @@
 module Node.OperatingSystem.LowLevel
     exposing
         ( homedir
+        , platform
         , tmpdir
         )
 
@@ -11,6 +12,11 @@ import Native.OperatingSystem
 homedir : Result Decode.Value String
 homedir =
     Native.OperatingSystem.homedir
+
+
+platform : Result Decode.Value String
+platform =
+    Native.OperatingSystem.platform
 
 
 tmpdir : Result Decode.Value String

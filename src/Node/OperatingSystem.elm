@@ -1,12 +1,14 @@
 module Node.OperatingSystem
     exposing
-        ( home
+        ( Platform(..)
+        , home
+        , platform
         , temp
         )
 
 {-| Operating system information.
 
-@docs home , temp
+@docs Platform , home , platform , temp
 
 -}
 
@@ -20,6 +22,59 @@ home : Result Error String
 home =
     LowLevel.homedir
         |> Result.mapError Error.fromValue
+
+
+{-| Platforms supported by Node.js.
+-}
+type Platform
+    = Aix
+    | Android
+    | Darwin
+    | FreeBsd
+    | Linux
+    | OpenBsd
+    | SunOs
+    | Windows
+
+
+stringToPlatform : String -> Result String Platform
+stringToPlatform string =
+    case string of
+        "aix" ->
+            Ok Aix
+
+        "android" ->
+            Ok Android
+
+        "darwin" ->
+            Ok Darwin
+
+        "freebsd" ->
+            Ok FreeBsd
+
+        "linux" ->
+            Ok Linux
+
+        "openbsd" ->
+            Ok OpenBsd
+
+        "sunos" ->
+            Ok SunOs
+
+        "win32" ->
+            Ok Windows
+
+        _ ->
+            Err <| "Unrecognized platform: " ++ string
+
+
+{-| Platform set at compile time of current running version of Node.js.
+-}
+platform : Result Error Platform
+platform =
+    LowLevel.platform
+        |> Result.mapError Error.fromValue
+        |> Result.andThen (stringToPlatform >> Result.mapError (\message -> Error message ""))
 
 
 {-| Current user's temporary directory.

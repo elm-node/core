@@ -44,6 +44,23 @@ init =
                     (\_ ->
                         let
                             message =
+                                Debug.log "Testing" "platform"
+                        in
+                            case OperatingSystem.platform of
+                                Ok _ ->
+                                    let
+                                        message =
+                                            Debug.log "Complete" "platform"
+                                    in
+                                        Ok ()
+
+                                Err error ->
+                                    Err error
+                    )
+                |> Result.andThen
+                    (\_ ->
+                        let
+                            message =
                                 Debug.log "Testing" "temp"
                         in
                             case OperatingSystem.temp of
