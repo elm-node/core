@@ -1,6 +1,6 @@
 module Node.FileSystem
     exposing
-        ( PathType(..)
+        ( FileType(..)
         , Stats
         , copy
         , defaultEncoding
@@ -24,7 +24,7 @@ module Node.FileSystem
 
 ## Query
 
-@docs Stats , PathType , exists , statistics
+@docs Stats , FileType , exists , statistics
 
 
 ## Manage
@@ -83,15 +83,15 @@ defaultMode =
 
 {-| Path types.
 -}
-type PathType
+type FileType
     = File
     | Directory
     | Socket
     | SymbolicLink
 
 
-pathTypeFromString : String -> Result String PathType
-pathTypeFromString string =
+fileTypeFromString : String -> Result String FileType
+fileTypeFromString string =
     case string of
         "isDirectory" ->
             Ok Directory
@@ -112,7 +112,7 @@ pathTypeFromString string =
 {-| Path statistics.
 -}
 type alias Stats =
-    { type_ : PathType
+    { type_ : FileType
     , size : Int
     , mode : Mode
     , accessed : Time
@@ -152,7 +152,7 @@ statsFromValue =
                                         Decode.fail "No types were specified."
 
                                     Just type_ ->
-                                        pathTypeFromString type_ |> Result.unpack Decode.fail Decode.succeed
+                                        fileTypeFromString type_ |> Result.unpack Decode.fail Decode.succeed
                         )
                 )
             |> Decode.andMap (Decode.field "size" Decode.int)
