@@ -27,13 +27,13 @@ init =
                     (\_ ->
                         let
                             message =
-                                Debug.log "Testing" "home"
+                                Debug.log "Testing" "homeDirectory"
                         in
-                            case OperatingSystem.home of
+                            case OperatingSystem.homeDirectory of
                                 Ok dirname ->
                                     let
                                         message =
-                                            Debug.log "Complete" "home"
+                                            Debug.log "Complete" "homeDirectory"
                                     in
                                         Ok ()
 
@@ -61,13 +61,13 @@ init =
                     (\_ ->
                         let
                             message =
-                                Debug.log "Testing" "temp"
+                                Debug.log "Testing" "tempDirectory"
                         in
-                            case OperatingSystem.temp of
+                            case OperatingSystem.tempDirectory of
                                 Ok dirname ->
                                     let
                                         message =
-                                            Debug.log "Complete" "temp"
+                                            Debug.log "Complete" "tempDirectory"
                                     in
                                         Ok ()
 

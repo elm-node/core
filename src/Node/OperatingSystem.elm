@@ -1,14 +1,14 @@
 module Node.OperatingSystem
     exposing
         ( Platform(..)
-        , home
+        , homeDirectory
         , platform
-        , temp
+        , tempDirectory
         )
 
 {-| Operating system information.
 
-@docs Platform , home , platform , temp
+@docs Platform , homeDirectory , platform , tempDirectory
 
 -}
 
@@ -18,8 +18,8 @@ import Node.OperatingSystem.LowLevel as LowLevel
 
 {-| Current user's home directory.
 -}
-home : Result Error String
-home =
+homeDirectory : Result Error String
+homeDirectory =
     LowLevel.homedir
         |> Result.mapError Error.fromValue
 
@@ -79,7 +79,7 @@ platform =
 
 {-| Current user's temporary directory.
 -}
-temp : Result Error String
-temp =
+tempDirectory : Result Error String
+tempDirectory =
     LowLevel.tmpdir
         |> Result.mapError Error.fromValue
