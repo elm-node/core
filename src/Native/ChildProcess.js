@@ -11,7 +11,7 @@ const _elm_node$core$Native_ChildProcess = function () {
     const spawn = F3((command, argsList, silent) => nativeBinding(callback => {
         try {
             const args = toJSArray(fromList(argsList))
-            const subprocess = ChildProcess.spawn(command, args)
+            const subprocess = ChildProcess.spawn(command, args, { shell : true })
             if (!silent) {
                 subprocess.stderr.pipe(process.stderr)
                 subprocess.stdout.pipe(process.stdout)
@@ -29,8 +29,8 @@ const _elm_node$core$Native_ChildProcess = function () {
                 try {
                     if (error) return callback(fail(error))
                     return callback(succeed(Tuple2(
-                        code === null ? Just(code) : Nothing,
-                        signal === null ? Just(signal) : Nothing
+                        code === null ? Nothing : Just(code),
+                        signal === null ? Nothing : Just(signal)
                     )))
                 } catch (error2) { return callback(fail(error2)) }
             })
