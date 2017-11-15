@@ -421,51 +421,6 @@
     "generated-with-elm-version": "0.18.0"
   },
   {
-    "name": "Node.Global",
-    "comment": " Global functions\n\n@docs intToString , stringToInt\n\n",
-    "aliases": [],
-    "types": [],
-    "values": [
-      {
-        "name": "intToString",
-        "comment": " Convert an integer into a string using the specified radix.\n",
-        "type": "Int -> Int -> Result.Result Node.Error.Error String"
-      },
-      {
-        "name": "stringToInt",
-        "comment": " Convert a string into an integer using the specified radix.\n",
-        "type": "Int -> String -> Result.Result Node.Error.Error Int"
-      }
-    ],
-    "generated-with-elm-version": "0.18.0"
-  },
-  {
-    "name": "Node.Buffer",
-    "comment": " Native bindings for Buffer module.\n\n@docs Buffer , fromString , toString\n\n",
-    "aliases": [
-      {
-        "name": "Buffer",
-        "comment": " Buffer type.\n",
-        "args": [],
-        "type": "Node.Buffer.LowLevel.Buffer"
-      }
-    ],
-    "types": [],
-    "values": [
-      {
-        "name": "fromString",
-        "comment": " Convert a String to a Buffer.\n",
-        "type": "Node.Encoding.Encoding -> String -> Result.Result Node.Error.Error Node.Buffer.Buffer"
-      },
-      {
-        "name": "toString",
-        "comment": " Convert a Buffer to a String.\n",
-        "type": "Node.Encoding.Encoding -> Node.Buffer.Buffer -> Result.Result Node.Error.Error String"
-      }
-    ],
-    "generated-with-elm-version": "0.18.0"
-  },
-  {
     "name": "Node.Process",
     "comment": " Process\n\n@docs cwd , environment\n\n",
     "aliases": [],
@@ -480,6 +435,25 @@
         "name": "environment",
         "comment": " Environment variables.\n",
         "type": "Result.Result String (Dict.Dict String String)"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Node.Global",
+    "comment": " Global functions\n\n@docs intToString , stringToInt\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "intToString",
+        "comment": " Convert an integer into a string using the specified radix.\n",
+        "type": "Int -> Int -> Result.Result Node.Error.Error String"
+      },
+      {
+        "name": "stringToInt",
+        "comment": " Convert a string into an integer using the specified radix.\n",
+        "type": "Int -> String -> Result.Result Node.Error.Error Int"
       }
     ],
     "generated-with-elm-version": "0.18.0"
@@ -549,6 +523,32 @@
     "generated-with-elm-version": "0.18.0"
   },
   {
+    "name": "Node.Buffer",
+    "comment": " Native bindings for Buffer module.\n\n@docs Buffer , fromString , toString\n\n",
+    "aliases": [
+      {
+        "name": "Buffer",
+        "comment": " Buffer type.\n",
+        "args": [],
+        "type": "Node.Buffer.LowLevel.Buffer"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "fromString",
+        "comment": " Convert a String to a Buffer.\n",
+        "type": "Node.Encoding.Encoding -> String -> Result.Result Node.Error.Error Node.Buffer.Buffer"
+      },
+      {
+        "name": "toString",
+        "comment": " Convert a Buffer to a String.\n",
+        "type": "Node.Encoding.Encoding -> Node.Buffer.Buffer -> Result.Result Node.Error.Error String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
     "name": "Node.ChildProcess",
     "comment": " Child Process\n\n@docs Output , Exit , spawn\n\n",
     "aliases": [],
@@ -593,6 +593,91 @@
         "name": "spawn",
         "comment": " Spawn a child process by running the given command.\n",
         "type": "String -> Node.ChildProcess.Output -> Task.Task Node.Error.Error Node.ChildProcess.Exit"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Node.Path",
+    "comment": " Path\n\n@docs basename , delimiter , dirname , extname , join , separator\n\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "basename",
+        "comment": " Extract the basename from a filename.\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "delimiter",
+        "comment": " The platform-specific path delimiter.\n",
+        "type": "String"
+      },
+      {
+        "name": "dirname",
+        "comment": " Extract the directory name from a filename.\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "extname",
+        "comment": " Extract the extension name from a filename.\n",
+        "type": "String -> String"
+      },
+      {
+        "name": "join",
+        "comment": " Build a path from the list of supplied strings\n",
+        "type": "List String -> String"
+      },
+      {
+        "name": "separator",
+        "comment": " The platform-specific path segment separator.\n",
+        "type": "String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Node.Encoding",
+    "comment": " String encodings supported by Node.js.\n\n@docs Encoding , toString\n\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Encoding",
+        "comment": " Encoding union type.\n",
+        "args": [],
+        "cases": [
+          [
+            "Ascii",
+            []
+          ],
+          [
+            "Utf8",
+            []
+          ],
+          [
+            "Utf16le",
+            []
+          ],
+          [
+            "Base64",
+            []
+          ],
+          [
+            "Latin1",
+            []
+          ],
+          [
+            "Hex",
+            []
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "toString",
+        "comment": " Convert encoding to string.\n",
+        "type": "Node.Encoding.Encoding -> String"
       }
     ],
     "generated-with-elm-version": "0.18.0"
@@ -1110,91 +1195,6 @@
         "name": "message",
         "comment": " Extract the message from an Error.\n",
         "type": "Node.Error.Error -> String"
-      }
-    ],
-    "generated-with-elm-version": "0.18.0"
-  },
-  {
-    "name": "Node.Path",
-    "comment": " Path\n\n@docs basename , delimiter , dirname , extname , join , separator\n\n",
-    "aliases": [],
-    "types": [],
-    "values": [
-      {
-        "name": "basename",
-        "comment": " Extract the basename from a filename.\n",
-        "type": "String -> String"
-      },
-      {
-        "name": "delimiter",
-        "comment": " The platform-specific path delimiter.\n",
-        "type": "String"
-      },
-      {
-        "name": "dirname",
-        "comment": " Extract the directory name from a filename.\n",
-        "type": "String -> String"
-      },
-      {
-        "name": "extname",
-        "comment": " Extract the extension name from a filename.\n",
-        "type": "String -> String"
-      },
-      {
-        "name": "join",
-        "comment": " Build a path from the list of supplied strings\n",
-        "type": "List String -> String"
-      },
-      {
-        "name": "separator",
-        "comment": " The platform-specific path segment separator.\n",
-        "type": "String"
-      }
-    ],
-    "generated-with-elm-version": "0.18.0"
-  },
-  {
-    "name": "Node.Encoding",
-    "comment": " String encodings supported by Node.js.\n\n@docs Encoding , toString\n\n",
-    "aliases": [],
-    "types": [
-      {
-        "name": "Encoding",
-        "comment": " Encoding union type.\n",
-        "args": [],
-        "cases": [
-          [
-            "Ascii",
-            []
-          ],
-          [
-            "Utf8",
-            []
-          ],
-          [
-            "Utf16le",
-            []
-          ],
-          [
-            "Base64",
-            []
-          ],
-          [
-            "Latin1",
-            []
-          ],
-          [
-            "Hex",
-            []
-          ]
-        ]
-      }
-    ],
-    "values": [
-      {
-        "name": "toString",
-        "comment": " Convert encoding to string.\n",
-        "type": "Node.Encoding.Encoding -> String"
       }
     ],
     "generated-with-elm-version": "0.18.0"
