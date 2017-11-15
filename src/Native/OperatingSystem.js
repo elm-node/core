@@ -4,31 +4,16 @@ const _elm_node$core$Native_OperatingSystem = function () {
     const os = require("os")
 
 
-    // homedir : Result Decode.Value String
-    const homedir = function () {
-        try {
-            const dirname = os.homedir()
-            return Ok(dirname)
-        } catch (error) { return Err(error) }
-    }()
+    // homedir : String
+    const homedir = os.homedir()
 
 
-    // platform : Result Decode.Value String
-    const platform = function () {
-        try {
-            const value = os.platform()
-            return Ok(value)
-        } catch (error) { return Err(error) }
-    }()
+    // platform : String
+    const platform = os.platform()
 
 
-    // tmpdir : Result Decode.Value String
-    const tmpdir = function () {
-        try {
-            const dirname = os.tmpdir()
-            return Ok(dirname)
-        } catch (error) { return Err(error) }
-    }()
+    // tmpdir : String
+    const tmpdir = os.tmpdir()
 
 
     const exports =

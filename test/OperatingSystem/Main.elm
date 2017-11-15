@@ -29,16 +29,18 @@ init =
                             message =
                                 Debug.log "Testing" "homeDirectory"
                         in
-                            case OperatingSystem.homeDirectory of
-                                Ok dirname ->
+                            let
+                                value =
+                                    OperatingSystem.homeDirectory
+                            in
+                                if String.length value > 0 then
                                     let
                                         message =
                                             Debug.log "Complete" "homeDirectory"
                                     in
                                         Ok ()
-
-                                Err error ->
-                                    Err error
+                                else
+                                    Err <| Error.Error "Failed: 0 length" ""
                     )
                 |> Result.andThen
                     (\_ ->
@@ -63,16 +65,18 @@ init =
                             message =
                                 Debug.log "Testing" "tempDirectory"
                         in
-                            case OperatingSystem.tempDirectory of
-                                Ok dirname ->
+                            let
+                                value =
+                                    OperatingSystem.tempDirectory
+                            in
+                                if String.length value > 0 then
                                     let
                                         message =
                                             Debug.log "Complete" "tempDirectory"
                                     in
                                         Ok ()
-
-                                Err error ->
-                                    Err error
+                                else
+                                    Err <| Error.Error "Failed: 0 length" ""
                     )
                 |> Result.unpack Task.fail Task.succeed
                 |> Task.attempt TestComplete

@@ -18,10 +18,9 @@ import Node.OperatingSystem.LowLevel as LowLevel
 
 {-| Current user's home directory.
 -}
-homeDirectory : Result Error String
+homeDirectory : String
 homeDirectory =
     LowLevel.homedir
-        |> Result.mapError Error.fromValue
 
 
 {-| Platforms supported by Node.js.
@@ -73,13 +72,12 @@ stringToPlatform string =
 platform : Result Error Platform
 platform =
     LowLevel.platform
-        |> Result.mapError Error.fromValue
-        |> Result.andThen (stringToPlatform >> Result.mapError (\message -> Error message ""))
+        |> stringToPlatform
+        |> Result.mapError (\message -> Error message "")
 
 
 {-| Current user's temporary directory.
 -}
-tempDirectory : Result Error String
+tempDirectory : String
 tempDirectory =
     LowLevel.tmpdir
-        |> Result.mapError Error.fromValue
